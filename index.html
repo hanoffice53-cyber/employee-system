@@ -78,45 +78,34 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                                 
                                 <!-- Profile Image Slot -->
-                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white h-56 relative group">
-                                    <img id="profile-preview" src="https://via.placeholder.com/150" alt="Photo" class="w-32 h-32 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
-                                    <input type="file" id="photo-input" accept="image/*" onchange="previewImage(event)" class="hidden">
-                                    <span class="text-[10px] text-gray-400 mt-1">PHOTO</span>
+                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white h-72 relative group">
+                                    <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" class="w-48 h-48 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
+                                    <span class="text-[10px] text-gray-400 mt-1 font-bold">300 * 300 PHOTO</span>
                                 </div>
 
                                 <!-- Input Fields -->
                                 <div class="md:col-span-2 space-y-3">
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">ကဒ်နံပါတ် / ID နံပါတ် (ရှာရန်)</label>
-                                        <div class="flex gap-2">
-                                            <input type="text" id="card-no" placeholder="ဥပမာ - 30160" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white font-mono">
-                                            <button type="button" onclick="searchEmployee()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-lg text-sm transition flex items-center gap-1">
-                                                <i class="fa-solid fa-magnifying-glass"></i> ရှာရန်
-                                            </button>
-                                        </div>
+                                        <label class="block text-xs font-bold text-gray-700 mb-1">ကဒ်နံပါတ် / ID နံပါတ် (အလိုအလျောက် ရှာမည်)</label>
+                                        <input type="text" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white font-mono">
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">အမည်</label>
+                                        <label class="block text-xs font-bold text-gray-700 mb-1">အမည် (မြန်မာ)</label>
                                         <input type="text" id="person-name" placeholder="အမည်" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white" readonly>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <label class="block text-xs font-bold text-gray-700 mb-1">ကျား / မ</label>
-                                            <select id="gender" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white" disabled>
-                                                <option value="ကျား">ကျား (BOY)</option>
-                                                <option value="မ">မ (GIRL)</option>
-                                            </select>
-                                        </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-700 mb-1">အမည် (ထိုင်းဘာသာဖြင့်)</label>
+                                        <input type="text" id="thai-name" placeholder="ชื่อ (Thai Name)" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white font-semibold text-blue-900" readonly>
+                                    </div>
 
-                                        <div>
-                                            <label class="block text-xs font-bold text-gray-700 mb-1">အခြေအနေ (Status)</label>
-                                            <select id="status" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white font-bold" disabled>
-                                                <option value="ACTIVE" class="text-emerald-700">လက်ရှိ (Active)</option>
-                                                <option value="RESIGNED" class="text-red-600">အလုပ်ထွက် (Resigned)</option>
-                                            </select>
-                                        </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-700 mb-1">ကျား / မ</label>
+                                        <select id="gender" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white" disabled>
+                                            <option value="ကျား">ကျား (BOY)</option>
+                                            <option value="မ">မ (GIRL)</option>
+                                        </select>
                                     </div>
 
                                     <div>
@@ -141,21 +130,17 @@
                     </div>
                 </div>
 
-                <!-- RIGHT: STATS WIDGET (Fixed Grid Layout) -->
+                <!-- RIGHT: STATS WIDGET -->
                 <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex flex-col justify-between">
                     <h2 class="text-lg font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-emerald-600"></i>
-                        <span>စာရင်းအကျဉ်းချုပ်</span>
+                        <span>စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)</span>
                     </h2>
 
                     <div class="grid grid-cols-2 gap-3 my-auto">
-                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center shadow-sm">
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center shadow-sm col-span-2">
                             <span class="text-xs text-emerald-700 font-bold block mb-1">TOTAL (လက်ရှိ)</span>
-                            <span id="stat-total" class="text-2xl font-black text-emerald-800">0</span>
-                        </div>
-                        <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-center shadow-sm">
-                            <span class="text-xs text-red-700 font-bold block mb-1">အလုပ်ထွက်</span>
-                            <span id="stat-resigned" class="text-2xl font-black text-red-800">0</span>
+                            <span id="stat-total" class="text-3xl font-black text-emerald-800">0</span>
                         </div>
                         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center shadow-sm">
                             <span class="text-xs text-indigo-700 font-bold block mb-1">BOY (လက်ရှိ)</span>
@@ -168,6 +153,28 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- ROOM GRID DISPLAY -->
+            <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 gap-3">
+                    <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells text-emerald-600"></i>
+                        <span>အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)</span>
+                    </h2>
+
+                    <div class="flex flex-wrap gap-2 text-xs font-bold">
+                        <button onclick="switchRoomTab('A')" id="tab-A" class="room-tab-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm">Room A</button>
+                        <button onclick="switchRoomTab('B')" id="tab-B" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">Room B</button>
+                        <button onclick="switchRoomTab('C')" id="tab-C" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">Room C</button>
+                        <button onclick="switchRoomTab('D')" id="tab-D" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">Room D</button>
+                        <button onclick="switchRoomTab('OTHER')" id="tab-OTHER" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">အခြား/မသတ်မှတ်ရ</button>
+                    </div>
+                </div>
+
+                <div id="room-grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <!-- Dynamic Grid -->
+                </div>
             </div>
 
             <!-- ACTIVE TABLE LIST -->
@@ -185,20 +192,20 @@
                                 <th class="p-3">စဉ်</th>
                                 <th class="p-3">ဓာတ်ပုံ</th>
                                 <th class="p-3">ကဒ်နံပါတ်</th>
-                                <th class="p-3">အမည်</th>
+                                <th class="p-3">အမည် (မြန်မာ/ထိုင်း)</th>
                                 <th class="p-3">ကျား/မ</th>
                                 <th class="p-3">ဌာန</th>
                                 <th class="p-3">အခန်း</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-gray-200">
-                            <!-- Active Rows will appear here -->
+                            <!-- Rows -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- RESIGNED TABLE LIST -->
+            <!-- RESIGNED TABLE LIST (အလုပ်ထွက်သူများ သီးသန့်) -->
             <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 border-t-4 border-t-red-500">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="text-lg font-bold text-red-700 flex items-center gap-2">
@@ -213,14 +220,14 @@
                                 <th class="p-3">စဉ်</th>
                                 <th class="p-3">ဓာတ်ပုံ</th>
                                 <th class="p-3">ကဒ်နံပါတ်</th>
-                                <th class="p-3">အမည်</th>
+                                <th class="p-3">အမည် (မြန်မာ/ထိုင်း)</th>
                                 <th class="p-3">ကျား/မ</th>
                                 <th class="p-3">ဌာန</th>
-                                <th class="p-3">အခန်း</th>
+                                <th class="p-3">အခန်း/အခြေအနေ</th>
                             </tr>
                         </thead>
                         <tbody id="resigned-table-body" class="divide-y divide-gray-200">
-                            <!-- Resigned Rows will appear here -->
+                            <!-- Resigned Rows -->
                         </tbody>
                     </table>
                 </div>
@@ -231,12 +238,12 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5p34DoV0qaBilD37HP9JrjTdd2gdgNsBWLfjlSZqZ4oL59_m1g3609FegOrbImx-V/exec";
-        const CORRECT_PASSWORD = "1234";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJKIyGgPyNTYC-RnmCTe5QBgdlbDkGUTPxScI922L9Y5EPv2xt-j63Z_L7xeKTaeyo/exec";
+        const CORRECT_PASSWORD = "30276";
         
         let residents = [];
+        let currentRoomTab = 'A';
 
-        // စကားဝပ် စစ်ဆေးခြင်း
         function verifyPassword(e) {
             e.preventDefault();
             const inputPass = document.getElementById('password-input').value.trim();
@@ -252,7 +259,6 @@
             }
         }
 
-        // ထွက်ရန် (Logout)
         function logout() {
             document.getElementById('app-content').classList.add('hidden');
             document.getElementById('login-modal').classList.remove('hidden');
@@ -262,7 +268,7 @@
 
         function formatPhotoUrl(url) {
             if (!url || typeof url !== 'string' || url.length < 5) {
-                return 'https://via.placeholder.com/150';
+                return 'https://via.placeholder.com/300';
             }
             if (url.startsWith('data:image')) {
                 return url;
@@ -283,6 +289,7 @@
                     residents = data;
                     renderTables();
                     updateStats();
+                    renderRoomGrid();
                     document.getElementById('sync-status').innerText = "Google Sheet Sync ✔";
                 }
             } catch (e) {
@@ -291,38 +298,44 @@
             }
         }
 
+        // အလုပ်ထွက်သူများအား ခွဲခြားစစ်ဆေးခြင်း (JSON String တစ်ခုလုံးပါ အလုပ်ထွက် စာသားများကို စစ်မည်)
         function checkIsResigned(r) {
-            const stat = String(r.status || '').trim();
-            const dept = String(r.department || '').trim();
-            const nam = String(r.name || '');
-            
+            const fullDataString = JSON.stringify(r || {}).toLowerCase();
+
             return (
-                stat === 'RESIGNED' || 
-                stat === 'အလုပ်ထွက်' || 
-                dept.includes('အလုပ်ထွက်') || 
-                nam.includes('အလုပ်ထွက်')
+                fullDataString.includes('အလုပ်ထွက်') ||
+                fullDataString.includes('resigned') ||
+                fullDataString.includes('ไปทำงานอื่น') ||
+                fullDataString.includes('ลาออก') ||
+                fullDataString.includes('ออก') ||
+                fullDataString.includes('လာဘ်') ||
+                fullDataString.includes('(0)')
             );
+        }
+
+        // ကျား/မ ခွဲခြားရန် Helper ဖန်ရှင်
+        function getGenderText(r) {
+            const allValues = Object.values(r || {}).join(' ');
+            if (allValues.includes('ญ') || allValues.includes('မ') || allValues.toLowerCase().includes('girl') || allValues.toLowerCase().includes('female')) {
+                return 'မ';
+            }
+            return 'ကျား';
         }
 
         function searchEmployee() {
             const cardNoInput = document.getElementById('card-no').value.trim();
             if (!cardNoInput) {
-                alert("ကျေးဇူးပြု၍ ကဒ်နံပါတ် ရိုက်ထည့်ပါ");
+                resetForm();
                 return;
             }
 
             const found = residents.find(item => String(item.cardNo).trim() === cardNoInput);
             if (found) {
                 document.getElementById('person-name').value = found.name || '';
+                document.getElementById('thai-name').value = found.thaiName || '';
                 
-                const g = found.gender || '';
-                if (g === 'မ' || g === 'ญ') {
-                    document.getElementById('gender').value = 'မ';
-                } else {
-                    document.getElementById('gender').value = 'ကျား';
-                }
-
-                document.getElementById('status').value = checkIsResigned(found) ? 'RESIGNED' : 'ACTIVE';
+                const gender = getGenderText(found);
+                document.getElementById('gender').value = gender;
 
                 const deptSelect = document.getElementById('department');
                 const deptVal = found.department || 'OFFICE';
@@ -340,8 +353,10 @@
                 const photoSrc = formatPhotoUrl(found.photo);
                 document.getElementById('profile-preview').src = photoSrc;
             } else {
-                alert("ဤကဒ်နံပါတ်ဖြင့် ဝန်ထမ်းအချက်အလက် ရှာမတွေ့ပါ။");
-                resetForm();
+                document.getElementById('person-name').value = '';
+                document.getElementById('thai-name').value = '';
+                document.getElementById('room-no').value = '';
+                document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
             }
         }
 
@@ -357,7 +372,7 @@
 
             residents.forEach((r) => {
                 const photoSrc = formatPhotoUrl(r.photo);
-                const genderTxt = (r.gender === 'မ' || r.gender === 'ญ') ? 'မ' : 'ကျား';
+                const genderTxt = getGenderText(r);
                 const isResigned = checkIsResigned(r);
 
                 const tr = document.createElement('tr');
@@ -365,20 +380,20 @@
                 if (isResigned) {
                     tr.innerHTML = `
                         <td class="p-3 font-bold text-gray-500">${resignedIndex++}</td>
-                        <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/150'"></td>
+                        <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
-                        <td class="p-3 font-semibold text-gray-700">${r.name || ''}</td>
+                        <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
                         <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === 'ကျား' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
-                        <td class="p-3 font-semibold text-red-600">${r.department || 'အလုပ်ထွက်'}</td>
+                        <td class="p-3 font-semibold text-red-600">${r.department || ''}</td>
                         <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'}</td>
                     `;
                     resignedTbody.appendChild(tr);
                 } else {
                     tr.innerHTML = `
                         <td class="p-3 font-bold text-gray-500">${activeIndex++}</td>
-                        <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/150'"></td>
+                        <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
-                        <td class="p-3 font-semibold">${r.name || ''}</td>
+                        <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
                         <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === 'ကျား' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
                         <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
                         <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
@@ -388,15 +403,101 @@
             });
         }
 
+        function switchRoomTab(tabKey) {
+            currentRoomTab = tabKey;
+            document.querySelectorAll('.room-tab-btn').forEach(btn => {
+                btn.className = "room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg";
+            });
+            const activeBtn = document.getElementById(`tab-${tabKey}`);
+            if (activeBtn) {
+                activeBtn.className = "room-tab-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm font-bold";
+            }
+            renderRoomGrid();
+        }
+
+        function renderRoomGrid() {
+            const container = document.getElementById('room-grid-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const activeList = residents.filter(r => !checkIsResigned(r));
+
+            const filteredByTab = activeList.filter(r => {
+                const room = String(r.roomNo || '').trim().toUpperCase();
+                
+                if (currentRoomTab === 'OTHER') {
+                    return !room.startsWith('A') && !room.startsWith('B') && !room.startsWith('C') && !room.startsWith('D');
+                }
+                return room.startsWith(currentRoomTab);
+            });
+
+            const roomGroups = {};
+            filteredByTab.forEach(r => {
+                const rm = String(r.roomNo || 'မသတ်မှတ်ရသေး').trim();
+                if (!roomGroups[rm]) {
+                    roomGroups[rm] = [];
+                }
+                roomGroups[rm].push(r);
+            });
+
+            const sortedRooms = Object.keys(roomGroups).sort((a, b) => {
+                const parseRoom = (str) => {
+                    const parts = str.split(' ');
+                    const namePart = parts[parts.length - 1];
+                    if (namePart.includes('/')) {
+                        const sub = namePart.split('/');
+                        return { major: parseInt(sub[0]) || 0, minor: parseInt(sub[1]) || 0 };
+                    } else {
+                        return { major: parseInt(namePart) || 0, minor: 8.5 };
+                    }
+                };
+                const roomA = parseRoom(a);
+                const roomB = parseRoom(b);
+                if (roomA.major !== roomB.major) return roomA.major - roomB.major;
+                return roomA.minor - roomB.minor;
+            });
+
+            if (sortedRooms.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 font-semibold">Room ${currentRoomTab} တွင် စာရင်းရှိသူ မရှိပါ။</div>`;
+                return;
+            }
+
+            sortedRooms.forEach(roomName => {
+                const members = roomGroups[roomName];
+                const card = document.createElement('div');
+                card.className = "border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between";
+
+                let membersHTML = members.map(m => {
+                    const gText = getGenderText(m);
+                    const gTag = (gText === 'မ') ? 'ญ' : 'ช';
+                    return `
+                        <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
+                            <span class="truncate font-semibold text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
+                            <span class="text-xs font-bold ${gTag === 'ญ' ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="bg-emerald-400 text-emerald-950 font-black text-center py-1 text-sm border-b border-emerald-500 tracking-wider">
+                            ${roomName}
+                        </div>
+                        <div class="divide-y divide-gray-100 min-h-[60px]">
+                            ${membersHTML}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         function updateStats() {
             const activeList = residents.filter(r => !checkIsResigned(r));
-            const resignedList = residents.filter(r => checkIsResigned(r));
-
             document.getElementById('stat-total').innerText = activeList.length;
-            document.getElementById('stat-resigned').innerText = resignedList.length;
 
-            const boys = activeList.filter(r => r.gender === 'ကျား' || r.gender === 'ช').length;
-            const girls = activeList.filter(r => r.gender === 'မ' || r.gender === 'ญ').length;
+            const girls = activeList.filter(r => getGenderText(r) === 'မ').length;
+            const boys = activeList.length - girls;
             
             document.getElementById('stat-boy').innerText = boys;
             document.getElementById('stat-girl').innerText = girls;
@@ -405,11 +506,11 @@
         function resetForm() {
             document.getElementById('card-no').value = '';
             document.getElementById('person-name').value = '';
+            document.getElementById('thai-name').value = '';
             document.getElementById('gender').value = 'ကျား';
-            document.getElementById('status').value = 'ACTIVE';
             document.getElementById('department').value = 'OFFICE';
             document.getElementById('room-no').value = '';
-            document.getElementById('profile-preview').src = 'https://via.placeholder.com/150';
+            document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
         }
     </script>
 </body>
