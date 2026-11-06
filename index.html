@@ -193,7 +193,6 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-emerald-50 text-emerald-900 border-b">
-                                <th class="p-3" id="th-no">စဉ်</th>
                                 <th class="p-3" id="th-photo">ဓာတ်ပုံ</th>
                                 <th class="p-3" id="th-card">ကဒ်နံပါတ်</th>
                                 <th class="p-3" id="th-name">အမည် (မြန်မာ/ထိုင်း)</th>
@@ -221,7 +220,6 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-red-50 text-red-900 border-b">
-                                <th class="p-3" id="th-r-no">စဉ်</th>
                                 <th class="p-3" id="th-r-photo">ဓာတ်ပုံ</th>
                                 <th class="p-3" id="th-r-card">ကဒ်နံပါတ်</th>
                                 <th class="p-3" id="th-r-name">အမည် (မြန်မာ/ထိုင်း)</th>
@@ -276,7 +274,6 @@
                 tabOther: "အခြား/မသတ်မှတ်ရ",
                 activeTable: "လက်ရှိ နေထိုင်သူများ စာရင်း",
                 resignedTable: "အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)",
-                thNo: "စဉ်",
                 thPhoto: "ဓာတ်ပုံ",
                 thCard: "ကဒ်နံပါတ်",
                 thName: "အမည် (မြန်မာ/ထိုင်း)",
@@ -315,7 +312,6 @@
                 tabOther: "อื่นๆ / ยังไม่ระบุ",
                 activeTable: "รายชื่อผู้พักอาศัยปัจจุบัน",
                 resignedTable: "รายชื่อพนักงานที่ลาออก (แยกต่างหาก)",
-                thNo: "ลำดับ",
                 thPhoto: "รูปถ่าย",
                 thCard: "รหัสบัตร",
                 thName: "ชื่อ (เมียนมา/ไทย)",
@@ -374,7 +370,6 @@
             document.getElementById('txt-active-table').innerText = t.activeTable;
             document.getElementById('txt-resigned-table').innerText = t.resignedTable;
 
-            document.getElementById('th-no').innerText = t.thNo;
             document.getElementById('th-photo').innerText = t.thPhoto;
             document.getElementById('th-card').innerText = t.thCard;
             document.getElementById('th-name').innerText = t.thName;
@@ -382,7 +377,6 @@
             document.getElementById('th-dept').innerText = t.thDept;
             document.getElementById('th-room').innerText = t.thRoom;
 
-            document.getElementById('th-r-no').innerText = t.thNo;
             document.getElementById('th-r-photo').innerText = t.thPhoto;
             document.getElementById('th-r-card').innerText = t.thCard;
             document.getElementById('th-r-name').innerText = t.thName;
@@ -514,9 +508,6 @@
             tbody.innerHTML = '';
             resignedTbody.innerHTML = '';
 
-            let activeIndex = 1;
-            let resignedIndex = 1;
-
             residents.forEach((r) => {
                 const photoSrc = formatPhotoUrl(r.photo);
                 const genderTxt = getGenderText(r);
@@ -527,7 +518,6 @@
 
                 if (isResigned) {
                     tr.innerHTML = `
-                        <td class="p-3 font-bold text-gray-500">${resignedIndex++}</td>
                         <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
                         <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
@@ -538,7 +528,6 @@
                     resignedTbody.appendChild(tr);
                 } else {
                     tr.innerHTML = `
-                        <td class="p-3 font-bold text-gray-500">${activeIndex++}</td>
                         <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
                         <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
