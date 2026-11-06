@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="my" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်</title>
+    <title id="page-title">ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: 'Padauk', 'Inter', sans-serif;
+            font-family: 'Padauk', 'Sarabun', sans-serif;
             background-color: #f3f4f6;
         }
     </style>
@@ -27,13 +27,13 @@
                 <i class="fa-solid fa-lock"></i>
             </div>
             <div>
-                <h3 class="text-xl font-bold text-gray-800">စကားဝပ် ရိုက်ထည့်ပါ</h3>
-                <p class="text-xs text-gray-500 mt-1">စနစ်အသုံးပြုရန် လျှို့ဝှက်နံပါတ် ဖြည့်သွင်းပါ</p>
+                <h3 id="txt-login-title" class="text-xl font-bold text-gray-800">စကားဝပ် ရိုက်ထည့်ပါ</h3>
+                <p id="txt-login-sub" class="text-xs text-gray-500 mt-1">စနစ်အသုံးပြုရန် လျှို့ဝှက်နံပါတ် ဖြည့်သွင်းပါ</p>
             </div>
             
             <form onsubmit="verifyPassword(event)" class="space-y-3">
                 <input type="password" id="password-input" placeholder="Password ရိုက်ပါ" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-center text-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono">
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">
+                <button type="submit" id="txt-login-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">
                     ဝင်ရောက်မည်
                 </button>
             </form>
@@ -48,9 +48,13 @@
             <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center space-x-2 space-x-reverse">
                     <i class="fa-solid fa-address-card text-2xl"></i>
-                    <h1 class="text-lg font-bold">ဝန်ထမ်း အချက်အလက် စီမံခန့်ခွဲမှုစနစ်</h1>
+                    <h1 id="txt-main-title" class="text-lg font-bold">ဝန်ထမ်း အချက်အလက် စီမံခန့်ခွဲမှုစနစ်</h1>
                 </div>
                 <div class="flex items-center gap-2">
+                    <!-- LANGUAGE SWITCHER BUTTON -->
+                    <button onclick="toggleLanguage()" class="bg-emerald-800 hover:bg-emerald-900 px-3 py-1.5 rounded-lg text-white text-xs font-bold flex items-center gap-1.5" title="Change Language">
+                        <i class="fa-solid fa-globe"></i> <span id="lang-label">မြန်မာ / ไทย</span>
+                    </button>
                     <span id="sync-status" class="text-xs bg-emerald-800 px-2 py-1 rounded text-emerald-200">Google Sheet Sync ✔</span>
                     <button onclick="loadData()" class="bg-emerald-800 hover:bg-emerald-900 p-2 rounded-lg text-white" title="ဒေတာပြန်ဆွဲမည်">
                         <i class="fa-solid fa-rotate"></i>
@@ -71,7 +75,7 @@
                     <div>
                         <h2 class="text-lg font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
                             <i class="fa-solid fa-address-card text-emerald-600"></i>
-                            <span>ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
+                            <span id="txt-section-search">ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
                         </h2>
 
                         <div class="border-2 border-gray-800 rounded-xl p-4 bg-gray-50 mb-4">
@@ -86,30 +90,30 @@
                                 <!-- Input Fields -->
                                 <div class="md:col-span-2 space-y-3">
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">ကဒ်နံပါတ် / ID နံပါတ် (အလိုအလျောက် ရှာမည်)</label>
+                                        <label id="lbl-card" class="block text-xs font-bold text-gray-700 mb-1">ကဒ်နံပါတ် / ID နံပါတ် (အလိုအလျောက် ရှာမည်)</label>
                                         <input type="text" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white font-mono">
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">အမည် (မြန်မာ)</label>
+                                        <label id="lbl-name" class="block text-xs font-bold text-gray-700 mb-1">အမည် (မြန်မာ)</label>
                                         <input type="text" id="person-name" placeholder="အမည်" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white" readonly>
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">အမည် (ထိုင်းဘာသာဖြင့်)</label>
+                                        <label id="lbl-thai-name" class="block text-xs font-bold text-gray-700 mb-1">အမည် (ထိုင်းဘာသာဖြင့်)</label>
                                         <input type="text" id="thai-name" placeholder="ชื่อ (Thai Name)" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white font-semibold text-blue-900" readonly>
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">ကျား / မ</label>
+                                        <label id="lbl-gender" class="block text-xs font-bold text-gray-700 mb-1">ကျား / မ</label>
                                         <select id="gender" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white" disabled>
-                                            <option value="ကျား">ကျား (BOY)</option>
-                                            <option value="မ">မ (GIRL)</option>
+                                            <option value="ကျား" id="opt-boy">ကျား (BOY)</option>
+                                            <option value="မ" id="opt-girl">မ (GIRL)</option>
                                         </select>
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">ဌာန</label>
+                                        <label id="lbl-dept" class="block text-xs font-bold text-gray-700 mb-1">ဌာန</label>
                                         <select id="department" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white font-semibold" disabled>
                                             <option value="OFFICE">OFFICE</option>
                                             <option value="PRODUCTION">PRODUCTION</option>
@@ -120,7 +124,7 @@
                                     </div>
 
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-700 mb-1">ROOM (အခန်းနံပါတ်)</label>
+                                        <label id="lbl-room" class="block text-xs font-bold text-gray-700 mb-1">ROOM (အခန်းနံပါတ်)</label>
                                         <input type="text" id="room-no" placeholder="ဥပမာ - D 3/9" class="w-full px-3 py-1.5 border border-gray-400 rounded-lg text-sm bg-white font-bold" readonly>
                                     </div>
                                 </div>
@@ -134,20 +138,20 @@
                 <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex flex-col justify-between">
                     <h2 class="text-lg font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-emerald-600"></i>
-                        <span>စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)</span>
+                        <span id="txt-summary-title">စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)</span>
                     </h2>
 
                     <div class="grid grid-cols-2 gap-3 my-auto">
                         <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center shadow-sm col-span-2">
-                            <span class="text-xs text-emerald-700 font-bold block mb-1">TOTAL (လက်ရှိ)</span>
+                            <span id="txt-stat-total" class="text-xs text-emerald-700 font-bold block mb-1">TOTAL (လက်ရှိ)</span>
                             <span id="stat-total" class="text-3xl font-black text-emerald-800">0</span>
                         </div>
                         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center shadow-sm">
-                            <span class="text-xs text-indigo-700 font-bold block mb-1">BOY (လက်ရှိ)</span>
+                            <span id="txt-stat-boy" class="text-xs text-indigo-700 font-bold block mb-1">BOY (လက်ရှိ)</span>
                             <span id="stat-boy" class="text-2xl font-black text-indigo-800">0</span>
                         </div>
                         <div class="bg-pink-50 border border-pink-200 rounded-xl p-3 text-center shadow-sm">
-                            <span class="text-xs text-pink-700 font-bold block mb-1">GIRL (လက်ရှိ)</span>
+                            <span id="txt-stat-girl" class="text-xs text-pink-700 font-bold block mb-1">GIRL (လက်ရှိ)</span>
                             <span id="stat-girl" class="text-2xl font-black text-pink-800">0</span>
                         </div>
                     </div>
@@ -160,7 +164,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 gap-3">
                     <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
                         <i class="fa-solid fa-table-cells text-emerald-600"></i>
-                        <span>အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)</span>
+                        <span id="txt-grid-title">အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)</span>
                     </h2>
 
                     <div class="flex flex-wrap gap-2 text-xs font-bold">
@@ -182,20 +186,20 @@
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
                         <i class="fa-solid fa-users text-emerald-600"></i>
-                        <span>လက်ရှိ နေထိုင်သူများ စာရင်း</span>
+                        <span id="txt-active-table">လက်ရှိ နေထိုင်သူများ စာရင်း</span>
                     </h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-emerald-50 text-emerald-900 border-b">
-                                <th class="p-3">စဉ်</th>
-                                <th class="p-3">ဓာတ်ပုံ</th>
-                                <th class="p-3">ကဒ်နံပါတ်</th>
-                                <th class="p-3">အမည် (မြန်မာ/ထိုင်း)</th>
-                                <th class="p-3">ကျား/မ</th>
-                                <th class="p-3">ဌာန</th>
-                                <th class="p-3">အခန်း</th>
+                                <th class="p-3" id="th-no">စဉ်</th>
+                                <th class="p-3" id="th-photo">ဓာတ်ပုံ</th>
+                                <th class="p-3" id="th-card">ကဒ်နံပါတ်</th>
+                                <th class="p-3" id="th-name">အမည် (မြန်မာ/ထိုင်း)</th>
+                                <th class="p-3" id="th-gender">ကျား/မ</th>
+                                <th class="p-3" id="th-dept">ဌာန</th>
+                                <th class="p-3" id="th-room">အခန်း</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-gray-200">
@@ -205,25 +209,25 @@
                 </div>
             </div>
 
-            <!-- RESIGNED TABLE LIST (အလုပ်ထွက်သူများ သီးသန့်) -->
+            <!-- RESIGNED TABLE LIST -->
             <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 border-t-4 border-t-red-500">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="text-lg font-bold text-red-700 flex items-center gap-2">
                         <i class="fa-solid fa-user-xmark text-red-500"></i>
-                        <span>အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)</span>
+                        <span id="txt-resigned-table">အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)</span>
                     </h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-red-50 text-red-900 border-b">
-                                <th class="p-3">စဉ်</th>
-                                <th class="p-3">ဓာတ်ပုံ</th>
-                                <th class="p-3">ကဒ်နံပါတ်</th>
-                                <th class="p-3">အမည် (မြန်မာ/ထိုင်း)</th>
-                                <th class="p-3">ကျား/မ</th>
-                                <th class="p-3">ဌာန</th>
-                                <th class="p-3">အခန်း/အခြေအနေ</th>
+                                <th class="p-3" id="th-r-no">စဉ်</th>
+                                <th class="p-3" id="th-r-photo">ဓာတ်ပုံ</th>
+                                <th class="p-3" id="th-r-card">ကဒ်နံပါတ်</th>
+                                <th class="p-3" id="th-r-name">အမည် (မြန်မာ/ထိုင်း)</th>
+                                <th class="p-3" id="th-r-gender">ကျား/မ</th>
+                                <th class="p-3" id="th-r-dept">ဌာန</th>
+                                <th class="p-3" id="th-r-room">အခန်း/အခြေအနေ</th>
                             </tr>
                         </thead>
                         <tbody id="resigned-table-body" class="divide-y divide-gray-200">
@@ -243,6 +247,149 @@
         
         let residents = [];
         let currentRoomTab = 'A';
+        let currentLang = localStorage.getItem('app_lang') || 'my'; // Default မြန်မာ
+
+        const translations = {
+            my: {
+                pageTitle: "ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်",
+                loginTitle: "စကားဝပ် ရိုက်ထည့်ပါ",
+                loginSub: "စနစ်အသုံးပြုရန် လျှို့ဝှက်နံပါတ် ဖြည့်သွင်းပါ",
+                loginPlaceholder: "Password ရိုက်ပါ",
+                loginBtn: "ဝင်ရောက်မည်",
+                loginError: "စကားဝပ် အမှားဖြစ်နေပါသည်။ ထပ်မံကြိုးစားပါ။",
+                mainTitle: "ဝန်ထမ်း အချက်အလက် စီမံခန့်ခွဲမှုစနစ်",
+                sectionSearch: "ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်",
+                lblCard: "ကဒ်နံပါတ် / ID နံပါတ် (အလိုအလျောက် ရှာမည်)",
+                lblCardPlaceholder: "ဥပမာ - 30160",
+                lblName: "အမည် (မြန်မာ)",
+                lblThaiName: "အမည် (ထိုင်းဘာသာဖြင့်)",
+                lblGender: "ကျား / မ",
+                optBoy: "ကျား (BOY)",
+                optGirl: "မ (GIRL)",
+                lblDept: "ဌာန",
+                lblRoom: "ROOM (အခန်းနံပါတ်)",
+                summaryTitle: "စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)",
+                statTotal: "TOTAL (လက်ရှိ)",
+                statBoy: "BOY (လက်ရှိ)",
+                statGirl: "GIRL (လက်ရှိ)",
+                gridTitle: "အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)",
+                tabOther: "အခြား/မသတ်မှတ်ရ",
+                activeTable: "လက်ရှိ နေထိုင်သူများ စာရင်း",
+                resignedTable: "အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)",
+                thNo: "စဉ်",
+                thPhoto: "ဓာတ်ပုံ",
+                thCard: "ကဒ်နံပါတ်",
+                thName: "အမည် (မြန်မာ/ထိုင်း)",
+                thGender: "ကျား/မ",
+                thDept: "ဌာန",
+                thRoom: "အခန်း",
+                thRoomStatus: "အခန်း/အခြေအနေ",
+                genderBoy: "ကျား",
+                genderGirl: "မ",
+                noRoomData: "တွင် စာရင်းရှိသူ မရှိပါ။",
+                unassignedRoom: "မသတ်မှတ်ရသေး"
+            },
+            th: {
+                pageTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
+                loginTitle: "กรุณากรอกรหัสผ่าน",
+                loginSub: "ใส่รหัสผ่านเพื่อเข้าสู่ระบบ",
+                loginPlaceholder: "ป้อนรหัสผ่าน",
+                loginBtn: "เข้าสู่ระบบ",
+                loginError: "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+                mainTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
+                sectionSearch: "ตรวจสอบข้อมูลพนักงาน",
+                lblCard: "รหัสบัตร / ID (ค้นหาอัตโนมัติ)",
+                lblCardPlaceholder: "เช่น - 30160",
+                lblName: "ชื่อ (เมียนมา)",
+                lblThaiName: "ชื่อ (ภาษาไทย)",
+                lblGender: "เพศ",
+                optBoy: "ชาย (BOY)",
+                optGirl: "หญิง (GIRL)",
+                lblDept: "แผนก",
+                lblRoom: "ห้องพัก (ROOM)",
+                summaryTitle: "สรุปยอดรวม (ผู้พักอาศัยปัจจุบัน)",
+                statTotal: "รวมทั้งหมด (ปัจจุบัน)",
+                statBoy: "ชาย (BOY)",
+                statGirl: "หญิง (GIRL)",
+                gridTitle: "มุมมองผังห้องพัก (Room Grid View)",
+                tabOther: "อื่นๆ / ยังไม่ระบุ",
+                activeTable: "รายชื่อผู้พักอาศัยปัจจุบัน",
+                resignedTable: "รายชื่อพนักงานที่ลาออก (แยกต่างหาก)",
+                thNo: "ลำดับ",
+                thPhoto: "รูปถ่าย",
+                thCard: "รหัสบัตร",
+                thName: "ชื่อ (เมียนมา/ไทย)",
+                thGender: "เพศ",
+                thDept: "แผนก",
+                thRoom: "ห้องพัก",
+                thRoomStatus: "ห้องพัก / สถานะ",
+                genderBoy: "ชาย",
+                genderGirl: "หญิง",
+                noRoomData: "ไม่มีรายชื่อในห้อง ",
+                unassignedRoom: "ไม่ระบุห้อง"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'my' ? 'th' : 'my';
+            localStorage.setItem('app_lang', currentLang);
+            updateUIStrings();
+            renderTables();
+            updateStats();
+            renderRoomGrid();
+        }
+
+        function updateUIStrings() {
+            const t = translations[currentLang];
+            document.getElementById('html-root').setAttribute('lang', currentLang);
+            document.body.style.fontFamily = currentLang === 'th' ? "'Sarabun', sans-serif" : "'Padauk', 'Sarabun', sans-serif";
+
+            document.getElementById('page-title').innerText = t.pageTitle;
+            document.getElementById('txt-login-title').innerText = t.loginTitle;
+            document.getElementById('txt-login-sub').innerText = t.loginSub;
+            document.getElementById('password-input').placeholder = t.loginPlaceholder;
+            document.getElementById('txt-login-btn').innerText = t.loginBtn;
+            document.getElementById('error-msg').innerText = t.loginError;
+
+            document.getElementById('txt-main-title').innerText = t.mainTitle;
+            document.getElementById('txt-section-search').innerText = t.sectionSearch;
+            document.getElementById('lbl-card').innerText = t.lblCard;
+            document.getElementById('card-no').placeholder = t.lblCardPlaceholder;
+            document.getElementById('lbl-name').innerText = t.lblName;
+            document.getElementById('lbl-thai-name').innerText = t.lblThaiName;
+            document.getElementById('lbl-gender').innerText = t.lblGender;
+            document.getElementById('opt-boy').innerText = t.optBoy;
+            document.getElementById('opt-girl').innerText = t.optGirl;
+            document.getElementById('lbl-dept').innerText = t.lblDept;
+            document.getElementById('lbl-room').innerText = t.lblRoom;
+
+            document.getElementById('txt-summary-title').innerText = t.summaryTitle;
+            document.getElementById('txt-stat-total').innerText = t.statTotal;
+            document.getElementById('txt-stat-boy').innerText = t.statBoy;
+            document.getElementById('txt-stat-girl').innerText = t.statGirl;
+
+            document.getElementById('txt-grid-title').innerText = t.gridTitle;
+            document.getElementById('tab-OTHER').innerText = t.tabOther;
+
+            document.getElementById('txt-active-table').innerText = t.activeTable;
+            document.getElementById('txt-resigned-table').innerText = t.resignedTable;
+
+            document.getElementById('th-no').innerText = t.thNo;
+            document.getElementById('th-photo').innerText = t.thPhoto;
+            document.getElementById('th-card').innerText = t.thCard;
+            document.getElementById('th-name').innerText = t.thName;
+            document.getElementById('th-gender').innerText = t.thGender;
+            document.getElementById('th-dept').innerText = t.thDept;
+            document.getElementById('th-room').innerText = t.thRoom;
+
+            document.getElementById('th-r-no').innerText = t.thNo;
+            document.getElementById('th-r-photo').innerText = t.thPhoto;
+            document.getElementById('th-r-card').innerText = t.thCard;
+            document.getElementById('th-r-name').innerText = t.thName;
+            document.getElementById('th-r-gender').innerText = t.thGender;
+            document.getElementById('th-r-dept').innerText = t.thDept;
+            document.getElementById('th-r-room').innerText = t.thRoomStatus;
+        }
 
         function verifyPassword(e) {
             e.preventDefault();
@@ -252,6 +399,7 @@
             if (inputPass === CORRECT_PASSWORD) {
                 document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
+                updateUIStrings();
                 loadData();
             } else {
                 errorMsg.classList.remove('hidden');
@@ -298,10 +446,8 @@
             }
         }
 
-        // အလုပ်ထွက်သူများအား ခွဲခြားစစ်ဆေးခြင်း (JSON String တစ်ခုလုံးပါ အလုပ်ထွက် စာသားများကို စစ်မည်)
         function checkIsResigned(r) {
             const fullDataString = JSON.stringify(r || {}).toLowerCase();
-
             return (
                 fullDataString.includes('အလုပ်ထွက်') ||
                 fullDataString.includes('resigned') ||
@@ -313,13 +459,13 @@
             );
         }
 
-        // ကျား/မ ခွဲခြားရန် Helper ဖန်ရှင်
         function getGenderText(r) {
+            const t = translations[currentLang];
             const allValues = Object.values(r || {}).join(' ');
             if (allValues.includes('ญ') || allValues.includes('မ') || allValues.toLowerCase().includes('girl') || allValues.toLowerCase().includes('female')) {
-                return 'မ';
+                return t.genderGirl;
             }
-            return 'ကျား';
+            return t.genderBoy;
         }
 
         function searchEmployee() {
@@ -335,7 +481,8 @@
                 document.getElementById('thai-name').value = found.thaiName || '';
                 
                 const gender = getGenderText(found);
-                document.getElementById('gender').value = gender;
+                const t = translations[currentLang];
+                document.getElementById('gender').value = (gender === t.genderGirl) ? 'မ' : 'ကျား';
 
                 const deptSelect = document.getElementById('department');
                 const deptVal = found.department || 'OFFICE';
@@ -374,6 +521,7 @@
                 const photoSrc = formatPhotoUrl(r.photo);
                 const genderTxt = getGenderText(r);
                 const isResigned = checkIsResigned(r);
+                const t = translations[currentLang];
 
                 const tr = document.createElement('tr');
 
@@ -383,7 +531,7 @@
                         <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
                         <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === 'ကျား' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === t.genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
                         <td class="p-3 font-semibold text-red-600">${r.department || ''}</td>
                         <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'}</td>
                     `;
@@ -394,7 +542,7 @@
                         <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
                         <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === 'ကျား' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === t.genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
                         <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
                         <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
                     `;
@@ -421,6 +569,7 @@
             container.innerHTML = '';
 
             const activeList = residents.filter(r => !checkIsResigned(r));
+            const t = translations[currentLang];
 
             const filteredByTab = activeList.filter(r => {
                 const room = String(r.roomNo || '').trim().toUpperCase();
@@ -433,7 +582,7 @@
 
             const roomGroups = {};
             filteredByTab.forEach(r => {
-                const rm = String(r.roomNo || 'မသတ်မှတ်ရသေး').trim();
+                const rm = String(r.roomNo || t.unassignedRoom).trim();
                 if (!roomGroups[rm]) {
                     roomGroups[rm] = [];
                 }
@@ -458,7 +607,7 @@
             });
 
             if (sortedRooms.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 font-semibold">Room ${currentRoomTab} တွင် စာရင်းရှိသူ မရှိပါ။</div>`;
+                container.innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 font-semibold">${t.noRoomData}${currentRoomTab}</div>`;
                 return;
             }
 
@@ -469,7 +618,7 @@
 
                 let membersHTML = members.map(m => {
                     const gText = getGenderText(m);
-                    const gTag = (gText === 'မ') ? 'ญ' : 'ช';
+                    const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
                     return `
                         <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
                             <span class="truncate font-semibold text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
@@ -496,7 +645,8 @@
             const activeList = residents.filter(r => !checkIsResigned(r));
             document.getElementById('stat-total').innerText = activeList.length;
 
-            const girls = activeList.filter(r => getGenderText(r) === 'မ').length;
+            const t = translations[currentLang];
+            const girls = activeList.filter(r => getGenderText(r) === t.genderGirl).length;
             const boys = activeList.length - girls;
             
             document.getElementById('stat-boy').innerText = boys;
