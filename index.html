@@ -79,17 +79,19 @@
 
                     <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                            <div class="flex flex-col items-center justify-center space-y-3">
-                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-60 sm:h-64 shadow-sm relative">
+                            <!-- Left Column: Photo & Room Card Preview -->
+                            <div class="flex flex-col items-center justify-start space-y-3">
+                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-60 sm:h-64 shadow-sm relative shrink-0">
                                     <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" class="w-36 h-36 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
                                     <span class="text-[10px] text-gray-400 font-bold">300 * 300 PHOTO</span>
                                 </div>
-                                <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm hidden">
+                                <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm opacity-0 transition-opacity duration-200">
                                     <div id="preview-room-title" class="bg-emerald-400 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500">ROOM</div>
-                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px]"></div>
+                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] min-h-[35px]"></div>
                                 </div>
                             </div>
 
+                            <!-- Right Column: Info Fields -->
                             <div class="md:col-span-2 space-y-3">
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                                     <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ကဒ်နံပါတ် / ID</div>
@@ -117,9 +119,7 @@
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                                     <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ဌာန</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <select id="department" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" disabled>
-                                        <option value="OFFICE">OFFICE</option>
-                                    </select>
+                                    <input type="text" id="department" class="w-full px-2 py-1.5 text-sm focus:outline-none font-semibold text-gray-800" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                                     <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ROOM (အခန်း)</div>
@@ -385,7 +385,13 @@
             const previewCard = document.getElementById('room-card-preview');
 
             if (!cardNoInput) {
-                previewCard.classList.add('hidden');
+                previewCard.classList.remove('opacity-100');
+                previewCard.classList.add('opacity-0');
+                document.getElementById('person-name').value = '';
+                document.getElementById('thai-name').value = '';
+                document.getElementById('department').value = '';
+                document.getElementById('room-no').value = '';
+                document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
                 return;
             }
 
@@ -394,11 +400,13 @@
                 document.getElementById('person-name').value = found.name || '';
                 document.getElementById('thai-name').value = found.thaiName || '';
                 document.getElementById('gender').value = getGenderText(found) === translations[currentLang].genderGirl ? 'မ' : 'ကျား';
+                document.getElementById('department').value = found.department || '';
                 document.getElementById('room-no').value = found.roomNo || '';
                 document.getElementById('profile-preview').src = formatPhotoUrl(found.photo);
 
                 if (found.roomNo) {
-                    previewCard.classList.remove('hidden');
+                    previewCard.classList.remove('opacity-0');
+                    previewCard.classList.add('opacity-100');
                     document.getElementById('preview-room-title').innerText = found.roomNo;
                     const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === found.roomNo.trim().toLowerCase());
                     const t = translations[currentLang];
@@ -408,7 +416,10 @@
                             <span class="font-bold ${getGenderText(m) === t.genderGirl ? 'text-pink-600' : 'text-blue-600'}">${getGenderText(m) === t.genderGirl ? 'ญ' : 'ช'}</span>
                         </div>
                     `).join('');
-                } else { previewCard.classList.add('hidden'); }
+                } else { 
+                    previewCard.classList.remove('opacity-100');
+                    previewCard.classList.add('opacity-0');
+                }
 
                 if (cardNoInput.length >= 5) cardInputEl.blur();
             }
@@ -436,7 +447,6 @@
             const activeList = residents.filter(r => !checkIsResigned(r));
             const t = translations[currentLang];
 
-            // A 1 သို့မဟုတ် တစ်ခုတည်းသောနံပါတ်များ လုံးဝမပါရှိစေဘဲ တောင်းဆိုထားသော အစဉ်အတိုင်း အပြည့်အစုံ ဖန်တီးပေးခြင်း
             let roomList = [];
             if (currentRoomTab !== 'OTHER') {
                 for (let i = 1; i <= 3; i++) {
@@ -473,7 +483,6 @@
                 }
             });
 
-            // A 1, B 1, C 1, D 1 ကဲ့သို့သော တစ်ခုတည်းသောအခန်းနံပါတ်များကို လုံးဝဖယ်ရှားရန် (မည်သည့်လူမှမရှိလျှင် ကတ်ပြားပါ ပျောက်သွားစေရန်)
             const sortedRooms = Object.keys(roomGroups).filter(roomName => {
                 if ((roomName === "A 1" || roomName === "B 1" || roomName === "C 1" || roomName === "D 1") && roomGroups[roomName].length === 0) {
                     return false;
