@@ -20,7 +20,7 @@
 </head>
 <body class="min-h-screen text-gray-800 flex flex-col">
 
-    <!-- LOGIN / PASSWORD MODAL -->
+    <!-- LOGIN MODAL -->
     <div id="login-modal" class="fixed inset-0 bg-slate-900 bg-opacity-80 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl border border-gray-100 text-center space-y-4">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
@@ -30,7 +30,6 @@
                 <h3 id="txt-login-title" class="text-xl font-bold text-gray-800">စကားဝပ် ရိုက်ထည့်ပါ</h3>
                 <p id="txt-login-sub" class="text-xs text-gray-500 mt-1">စနစ်အသုံးပြုရန် လျှို့ဝှက်နံပါတ် ဖြည့်သွင်းပါ</p>
             </div>
-            
             <form onsubmit="verifyPassword(event)" class="space-y-3">
                 <input type="password" id="password-input" placeholder="Password ရိုက်ပါ" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-center text-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono">
                 <button type="submit" id="txt-login-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">
@@ -41,220 +40,163 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTENT (Hidden until logged in) -->
+    <!-- MAIN APP CONTENT -->
     <div id="app-content" class="min-h-screen flex flex-col hidden">
         
-        <!-- Main Body -->
+        <!-- Navigation Menu Bar -->
+        <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+                    <button onclick="switchTab('check')" id="nav-check" class="nav-btn bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">စစ်ဆေးရန်</button>
+                    <button onclick="switchTab('rooms')" id="nav-rooms" class="nav-btn bg-emerald-700 hover:bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold">အခန်းများ</button>
+                    <button onclick="switchTab('active')" id="nav-active" class="nav-btn bg-emerald-700 hover:bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold">လက်ရှိစာရင်း</button>
+                    <button onclick="switchTab('resigned')" id="nav-resigned" class="nav-btn bg-emerald-700 hover:bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold">အလုပ်ထွက်</button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleLanguage()" class="bg-emerald-700 hover:bg-emerald-900 px-3 py-1.5 rounded-xl text-white text-xs font-bold shadow-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-globe"></i> <span id="lang-label">မြန်မာ / ไทย</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
         <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
             
-            <!-- Language Switcher -->
-            <div class="flex justify-end">
-                <button onclick="toggleLanguage()" class="bg-emerald-700 hover:bg-emerald-800 px-3 py-1.5 rounded-xl text-white text-xs font-bold shadow-md flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-globe"></i> <span id="lang-label">မြန်မာ / ไทย</span>
-                </button>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- LEFT: FORM LAYOUT -->
-                <div class="lg:col-span-2 bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-5 flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-lg font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
+            <!-- SECTION 1: CHECK & SEARCH -->
+            <div id="section-check" class="app-section space-y-6">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6 max-w-4xl mx-auto">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 mb-4 gap-3">
+                        <h2 id="txt-section-search" class="text-lg font-bold text-gray-800 flex items-center gap-2">
                             <i class="fa-solid fa-address-card text-emerald-600"></i>
-                            <span id="txt-section-search">ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
+                            <span>ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
                         </h2>
+                        <div class="flex items-center gap-3 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold">
+                            <span id="txt-stat-total" class="text-emerald-700">TOTAL: <strong id="stat-total" class="text-emerald-900 text-sm">0</strong></span>
+                            <span id="txt-stat-boy" class="text-indigo-700">BOY: <strong id="stat-boy" class="text-indigo-900 text-sm">0</strong></span>
+                            <span id="txt-stat-girl" class="text-pink-700">GIRL: <strong id="stat-girl" class="text-pink-900 text-sm">0</strong></span>
+                        </div>
+                    </div>
 
-                        <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-4 bg-gray-50 mb-4">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-                                
-                                <!-- Profile Image Slot & Room Preview -->
-                                <div class="flex flex-col items-center justify-center space-y-3">
-                                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-60 sm:h-64 relative group shadow-sm">
-                                        <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" class="w-36 h-36 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
-                                        <span class="text-[10px] text-gray-400 mt-1 font-bold">300 * 300 PHOTO</span>
-                                    </div>
-
-                                    <!-- Room Card Preview Box -->
-                                    <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm hidden">
-                                        <div id="preview-room-title" class="bg-emerald-400 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 tracking-wider">
-                                            ROOM
-                                        </div>
-                                        <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px]">
-                                            <!-- Room Members -->
-                                        </div>
-                                    </div>
+                    <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                            <div class="flex flex-col items-center justify-center space-y-3">
+                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-60 sm:h-64 shadow-sm relative">
+                                    <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" class="w-36 h-36 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
+                                    <span class="text-[10px] text-gray-400 font-bold">300 * 300 PHOTO</span>
                                 </div>
-
-                                <!-- Input Fields - Compact Inline Row Format -->
-                                <div class="md:col-span-2 space-y-2.5">
-                                    
-                                    <!-- Card No: type="tel" for Number + Mic keypad, with 5 digits blur trigger -->
-                                    <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-emerald-500">
-                                        <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
-                                            ကဒ်နံပါတ် / ID
-                                        </div>
-                                        <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <input type="tel" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-2 py-1.5 text-sm focus:outline-none font-mono font-bold text-gray-800">
-                                    </div>
-
-                                    <!-- Name Myanmar -->
-                                    <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                        <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
-                                            အမည် (မြန်မာ)
-                                        </div>
-                                        <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <input type="text" id="person-name" placeholder="အမည်" class="w-full px-2 py-1.5 text-sm focus:outline-none font-semibold text-gray-800" readonly>
-                                    </div>
-
-                                    <!-- Thai Name -->
-                                    <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                        <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
-                                            အမည် (ထိုင်း)
-                                        </div>
-                                        <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <input type="text" id="thai-name" placeholder="ชื่อ (Thai Name)" class="w-full px-2 py-1.5 text-sm focus:outline-none font-bold text-blue-900" readonly>
-                                    </div>
-
-                                    <!-- Gender -->
-                                    <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                        <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
-                                            ကျား / မ
-                                        </div>
-                                        <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <select id="gender" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" disabled>
-                                            <option value="ကျား" id="opt-boy">ကျား (BOY)</option>
-                                            <option value="မ" id="opt-girl">မ (GIRL)</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Department -->
-                                    <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                        <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
-                                            ဌာန
-                                        </div>
-                                        <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <select id="department" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" disabled>
-                                            <option value="OFFICE">OFFICE</option>
-                                            <option value="PRODUCTION">PRODUCTION</option>
-                                            <option value="LOGISTICS">LOGISTICS</option>
-                                            <option value="MAINTENANCE">MAINTENANCE</option>
-                                            <option value="စတိဒ်">စတိဒ်</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Room No -->
-                                    <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                        <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
-                                            ROOM (အခန်း)
-                                        </div>
-                                        <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <input type="text" id="room-no" placeholder="ဥပမာ - D 3/9" class="w-full px-2 py-1.5 text-sm focus:outline-none font-bold text-emerald-700" readonly>
-                                    </div>
-
+                                <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm hidden">
+                                    <div id="preview-room-title" class="bg-emerald-400 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500">ROOM</div>
+                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px]"></div>
                                 </div>
+                            </div>
 
+                            <div class="md:col-span-2 space-y-3">
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                                    <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ကဒ်နံပါတ် / ID</div>
+                                    <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
+                                    <input type="tel" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-2 py-1.5 text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                </div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                                    <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">အမည် (မြန်မာ)</div>
+                                    <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
+                                    <input type="text" id="person-name" class="w-full px-2 py-1.5 text-sm focus:outline-none font-semibold text-gray-800" readonly>
+                                </div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                                    <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">အမည် (ထိုင်း)</div>
+                                    <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
+                                    <input type="text" id="thai-name" class="w-full px-2 py-1.5 text-sm focus:outline-none font-bold text-blue-900" readonly>
+                                </div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                                    <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ကျား / မ</div>
+                                    <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
+                                    <select id="gender" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" disabled>
+                                        <option value="ကျား" id="opt-boy">ကျား (BOY)</option>
+                                        <option value="မ" id="opt-girl">မ (GIRL)</option>
+                                    </select>
+                                </div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                                    <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ဌာန</div>
+                                    <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
+                                    <select id="department" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" disabled>
+                                        <option value="OFFICE">OFFICE</option>
+                                    </select>
+                                </div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                                    <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ROOM (အခန်း)</div>
+                                    <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
+                                    <input type="text" id="room-no" class="w-full px-2 py-1.5 text-sm focus:outline-none font-bold text-emerald-700" readonly>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- RIGHT: STATS WIDGET -->
-                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex flex-col justify-between">
-                    <h2 class="text-lg font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-emerald-600"></i>
-                        <span id="txt-summary-title">စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)</span>
-                    </h2>
-
-                    <div class="grid grid-cols-2 gap-3 my-auto">
-                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center shadow-sm col-span-2">
-                            <span id="txt-stat-total" class="text-xs text-emerald-700 font-bold block mb-1">TOTAL (လက်ရှိ)</span>
-                            <span id="stat-total" class="text-3xl font-black text-emerald-800">0</span>
-                        </div>
-                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center shadow-sm">
-                            <span id="txt-stat-boy" class="text-xs text-indigo-700 font-bold block mb-1">BOY (လက်ရှိ)</span>
-                            <span id="stat-boy" class="text-2xl font-black text-indigo-800">0</span>
-                        </div>
-                        <div class="bg-pink-50 border border-pink-200 rounded-xl p-3 text-center shadow-sm">
-                            <span id="txt-stat-girl" class="text-xs text-pink-700 font-bold block mb-1">GIRL (လက်ရှိ)</span>
-                            <span id="stat-girl" class="text-2xl font-black text-pink-800">0</span>
+            <!-- SECTION 2: ROOM GRID VIEW -->
+            <div id="section-rooms" class="app-section space-y-4 hidden">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 gap-3">
+                        <h2 id="txt-grid-title" class="text-lg font-bold text-emerald-800 flex items-center gap-2">
+                            <i class="fa-solid fa-table-cells text-emerald-600"></i>
+                            <span>အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)</span>
+                        </h2>
+                        <div class="flex flex-wrap gap-2 text-xs font-bold">
+                            <button onclick="switchRoomTab('A')" id="tab-A" class="room-tab-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg">Room A</button>
+                            <button onclick="switchRoomTab('B')" id="tab-B" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room B</button>
+                            <button onclick="switchRoomTab('C')" id="tab-C" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room C</button>
+                            <button onclick="switchRoomTab('D')" id="tab-D" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room D</button>
+                            <button onclick="switchRoomTab('OTHER')" id="tab-OTHER" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">အခြား</button>
                         </div>
                     </div>
+                    <div id="room-grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
                 </div>
-
             </div>
 
-            <!-- ROOM GRID DISPLAY -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 gap-3">
-                    <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
-                        <i class="fa-solid fa-table-cells text-emerald-600"></i>
-                        <span id="txt-grid-title">အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)</span>
+            <!-- SECTION 3: ACTIVE RESIDENTS TABLE -->
+            <div id="section-active" class="app-section space-y-4 hidden">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5">
+                    <h2 id="txt-active-table" class="text-lg font-bold text-emerald-800 mb-4 border-b pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-emerald-600"></i> <span>လက်ရှိ နေထိုင်သူများ စာရင်း</span>
                     </h2>
-
-                    <div class="flex flex-wrap gap-2 text-xs font-bold">
-                        <button onclick="switchRoomTab('A')" id="tab-A" class="room-tab-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm">Room A</button>
-                        <button onclick="switchRoomTab('B')" id="tab-B" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">Room B</button>
-                        <button onclick="switchRoomTab('C')" id="tab-C" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">Room C</button>
-                        <button onclick="switchRoomTab('D')" id="tab-D" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">Room D</button>
-                        <button onclick="switchRoomTab('OTHER')" id="tab-OTHER" class="room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg">အခြား/မသတ်မှတ်ရ</button>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-emerald-50 text-emerald-900 border-b">
+                                    <th id="th-photo" class="p-3">ဓာတ်ပုံ</th>
+                                    <th id="th-card" class="p-3">ကဒ်နံပါတ်</th>
+                                    <th id="th-name" class="p-3">အမည် (မြန်မာ/ထိုင်း)</th>
+                                    <th id="th-gender" class="p-3">ကျား/မ</th>
+                                    <th id="th-dept" class="p-3">ဌာန</th>
+                                    <th id="th-room" class="p-3">အခန်း</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="divide-y divide-gray-200"></tbody>
+                        </table>
                     </div>
                 </div>
-
-                <div id="room-grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    <!-- Dynamic Grid -->
-                </div>
             </div>
 
-            <!-- ACTIVE TABLE LIST -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-emerald-600"></i>
-                        <span id="txt-active-table">လက်ရှိ နေထိုင်သူများ စာရင်း</span>
+            <!-- SECTION 4: RESIGNED TABLE -->
+            <div id="section-resigned" class="app-section space-y-4 hidden">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 border-t-4 border-t-red-500">
+                    <h2 id="txt-resigned-table" class="text-lg font-bold text-red-700 mb-4 border-b pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-user-xmark text-red-500"></i> <span>အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)</span>
                     </h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-emerald-50 text-emerald-900 border-b">
-                                <th class="p-3" id="th-photo">ဓာတ်ပုံ</th>
-                                <th class="p-3" id="th-card">ကဒ်နံပါတ်</th>
-                                <th class="p-3" id="th-name">အမည် (မြန်မာ/ထိုင်း)</th>
-                                <th class="p-3" id="th-gender">ကျား/မ</th>
-                                <th class="p-3" id="th-dept">ဌာန</th>
-                                <th class="p-3" id="th-room">အခန်း</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body" class="divide-y divide-gray-200">
-                            <!-- Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- RESIGNED TABLE LIST -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 border-t-4 border-t-red-500">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="text-lg font-bold text-red-700 flex items-center gap-2">
-                        <i class="fa-solid fa-user-xmark text-red-500"></i>
-                        <span id="txt-resigned-table">အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)</span>
-                    </h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-red-50 text-red-900 border-b">
-                                <th class="p-3" id="th-r-photo">ဓာတ်ပုံ</th>
-                                <th class="p-3" id="th-r-card">ကဒ်နံပါတ်</th>
-                                <th class="p-3" id="th-r-name">အမည် (မြန်မာ/ထိုင်း)</th>
-                                <th class="p-3" id="th-r-gender">ကျား/မ</th>
-                                <th class="p-3" id="th-r-dept">ဌာန</th>
-                                <th class="p-3" id="th-r-room">အခန်း/အခြေအနေ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resigned-table-body" class="divide-y divide-gray-200">
-                            <!-- Resigned Rows -->
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-red-50 text-red-900 border-b">
+                                    <th id="th-r-photo" class="p-3">ဓာတ်ပုံ</th>
+                                    <th id="th-r-card" class="p-3">ကဒ်နံပါတ်</th>
+                                    <th id="th-r-name" class="p-3">အမည် (မြန်မာ/ထိုင်း)</th>
+                                    <th id="th-r-gender" class="p-3">ကျား/မ</th>
+                                    <th id="th-r-dept" class="p-3">ဌာန</th>
+                                    <th id="th-r-room" class="p-3">အခန်း/အခြေအနေ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resigned-table-body" class="divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -273,11 +215,10 @@
         const translations = {
             my: {
                 pageTitle: "ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်",
-                loginTitle: "စကားဝပ် ရိုက်ထည့်ပါ",
-                loginSub: "စနစ်အသုံးပြုရန် လျှို့ဝှက်နံပါတ် ဖြည့်သွင်းပါ",
-                loginPlaceholder: "Password ရိုက်ပါ",
-                loginBtn: "ဝင်ရောက်မည်",
-                loginError: "စကားဝပ် အမှားဖြစ်နေပါသည်။ ထပ်မံကြိုးစားပါ။",
+                navCheck: "စစ်ဆေးရန်",
+                navRooms: "အခန်းများ",
+                navActive: "လက်ရှိစာရင်း",
+                navResigned: "အလုပ်ထွက်",
                 sectionSearch: "ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်",
                 lblCard: "ကဒ်နံပါတ် / ID",
                 lblCardPlaceholder: "ဥပမာ - 30160",
@@ -288,12 +229,8 @@
                 optGirl: "မ (GIRL)",
                 lblDept: "ဌာန",
                 lblRoom: "ROOM (အခန်း)",
-                summaryTitle: "စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)",
-                statTotal: "TOTAL (လက်ရှိ)",
-                statBoy: "BOY (လက်ရှိ)",
-                statGirl: "GIRL (လက်ရှိ)",
                 gridTitle: "အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)",
-                tabOther: "အခြား/မသတ်မှတ်ရ",
+                tabOther: "အခြား",
                 activeTable: "လက်ရှိ နေထိုင်သူများ စာရင်း",
                 resignedTable: "အလုပ်ထွက်သူများ စာရင်း (သီးသန့်)",
                 thPhoto: "ဓာတ်ပုံ",
@@ -304,17 +241,14 @@
                 thRoom: "အခန်း",
                 thRoomStatus: "အခန်း/အခြေအနေ",
                 genderBoy: "ကျား",
-                genderGirl: "မ",
-                noRoomData: "တွင် စာရင်းရှိသူ မရှိပါ။",
-                unassignedRoom: "မသတ်မှတ်ရသေး"
+                genderGirl: "မ"
             },
             th: {
                 pageTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
-                loginTitle: "กรุณากรอกรหัสผ่าน",
-                loginSub: "ใส่รหัสผ่านเพื่อเข้าสู่ระบบ",
-                loginPlaceholder: "ป้อนรหัสผ่าน",
-                loginBtn: "เข้าสู่ระบบ",
-                loginError: "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+                navCheck: "ตรวจสอบ",
+                navRooms: "ห้องพัก",
+                navActive: "รายชื่อปัจจุบัน",
+                navResigned: "ลาออก",
                 sectionSearch: "ตรวจสอบข้อมูลพนักงาน",
                 lblCard: "รหัสบัตร / ID",
                 lblCardPlaceholder: "เช่น - 30160",
@@ -325,12 +259,8 @@
                 optGirl: "หญิง (GIRL)",
                 lblDept: "แผนก",
                 lblRoom: "ห้องพัก (ROOM)",
-                summaryTitle: "สรุปยอดรวม (ผู้พักอาศัยปัจจุบัน)",
-                statTotal: "รวมทั้งหมด (ปัจจุบัน)",
-                statBoy: "ชาย (BOY)",
-                statGirl: "หญิง (GIRL)",
                 gridTitle: "มุมมองผังห้องพัก (Room Grid View)",
-                tabOther: "อื่นๆ / ยังไม่ระบุ",
+                tabOther: "อื่นๆ",
                 activeTable: "รายชื่อผู้พักอาศัยปัจจุบัน",
                 resignedTable: "รายชื่อพนักงานที่ลาออก (แยกต่างหาก)",
                 thPhoto: "รูปถ่าย",
@@ -341,21 +271,45 @@
                 thRoom: "ห้องพัก",
                 thRoomStatus: "ห้องพัก / สถานะ",
                 genderBoy: "ชาย",
-                genderGirl: "หญิง",
-                noRoomData: "ไม่มีรายชื่อในห้อง ",
-                unassignedRoom: "ไม่ระบุห้อง"
+                genderGirl: "หญิง"
             }
         };
+
+        function verifyPassword(e) {
+            e.preventDefault();
+            const pass = document.getElementById('password-input').value.trim();
+            if (pass === CORRECT_PASSWORD) {
+                document.getElementById('login-modal').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                loadData();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.className = "nav-btn bg-emerald-700 hover:bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold";
+            });
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabId}`).className = "nav-btn bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm";
+
+            if (tabId === 'rooms') renderRoomGrid();
+            if (tabId === 'active') renderActiveTable();
+            if (tabId === 'resigned') renderResignedTable();
+        }
 
         function toggleLanguage() {
             currentLang = currentLang === 'my' ? 'th' : 'my';
             localStorage.setItem('app_lang', currentLang);
             updateUIStrings();
-            renderTables();
             updateStats();
-            renderRoomGrid();
             const currentCard = document.getElementById('card-no').value.trim();
             if(currentCard) searchEmployee();
+            if(!document.getElementById('section-rooms').classList.contains('hidden')) renderRoomGrid();
+            if(!document.getElementById('section-active').classList.contains('hidden')) renderActiveTable();
+            if(!document.getElementById('section-resigned').classList.contains('hidden')) renderResignedTable();
         }
 
         function updateUIStrings() {
@@ -364,13 +318,12 @@
             document.body.style.fontFamily = currentLang === 'th' ? "'Sarabun', sans-serif" : "'Padauk', 'Sarabun', sans-serif";
 
             document.getElementById('page-title').innerText = t.pageTitle;
-            document.getElementById('txt-login-title').innerText = t.loginTitle;
-            document.getElementById('txt-login-sub').innerText = t.loginSub;
-            document.getElementById('password-input').placeholder = t.loginPlaceholder;
-            document.getElementById('txt-login-btn').innerText = t.loginBtn;
-            document.getElementById('error-msg').innerText = t.loginError;
+            document.getElementById('nav-check').innerText = t.navCheck;
+            document.getElementById('nav-rooms').innerText = t.navRooms;
+            document.getElementById('nav-active').innerText = t.navActive;
+            document.getElementById('nav-resigned').innerText = t.navResigned;
 
-            document.getElementById('txt-section-search').innerText = t.sectionSearch;
+            document.getElementById('txt-section-search').innerHTML = `<i class="fa-solid fa-address-card text-emerald-600"></i><span>${t.sectionSearch}</span>`;
             document.getElementById('lbl-card').innerText = t.lblCard;
             document.getElementById('card-no').placeholder = t.lblCardPlaceholder;
             document.getElementById('lbl-name').innerText = t.lblName;
@@ -381,16 +334,11 @@
             document.getElementById('lbl-dept').innerText = t.lblDept;
             document.getElementById('lbl-room').innerText = t.lblRoom;
 
-            document.getElementById('txt-summary-title').innerText = t.summaryTitle;
-            document.getElementById('txt-stat-total').innerText = t.statTotal;
-            document.getElementById('txt-stat-boy').innerText = t.statBoy;
-            document.getElementById('txt-stat-girl').innerText = t.statGirl;
-
-            document.getElementById('txt-grid-title').innerText = t.gridTitle;
+            document.getElementById('txt-grid-title').innerHTML = `<i class="fa-solid fa-table-cells text-emerald-600"></i><span>${t.gridTitle}</span>`;
             document.getElementById('tab-OTHER').innerText = t.tabOther;
 
-            document.getElementById('txt-active-table').innerText = t.activeTable;
-            document.getElementById('txt-resigned-table').innerText = t.resignedTable;
+            document.getElementById('txt-active-table').innerHTML = `<i class="fa-solid fa-users text-emerald-600"></i> <span>${t.activeTable}</span>`;
+            document.getElementById('txt-resigned-table').innerHTML = `<i class="fa-solid fa-user-xmark text-red-500"></i> <span>${t.resignedTable}</span>`;
 
             document.getElementById('th-photo').innerText = t.thPhoto;
             document.getElementById('th-card').innerText = t.thCard;
@@ -407,74 +355,28 @@
             document.getElementById('th-r-room').innerText = t.thRoomStatus;
         }
 
-        function verifyPassword(e) {
-            e.preventDefault();
-            const inputPass = document.getElementById('password-input').value.trim();
-            const errorMsg = document.getElementById('error-msg');
-
-            if (inputPass === CORRECT_PASSWORD) {
-                document.getElementById('login-modal').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-                updateUIStrings();
-                loadData();
-            } else {
-                errorMsg.classList.remove('hidden');
-                document.getElementById('password-input').value = '';
-            }
-        }
-
-        function formatPhotoUrl(url) {
-            if (!url || typeof url !== 'string' || url.length < 5) {
-                return 'https://via.placeholder.com/300';
-            }
-            if (url.startsWith('data:image')) {
-                return url;
-            }
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                return `https://lh3.googleusercontent.com/d/${match[1]}`;
-            }
-            return url;
-        }
-
         async function loadData() {
             try {
                 const res = await fetch(GOOGLE_SCRIPT_URL);
-                const data = await res.json();
-                if (Array.isArray(data)) {
-                    residents = data;
-                    renderTables();
-                    updateStats();
-                    renderRoomGrid();
-                    
-                    const currentCard = document.getElementById('card-no').value.trim();
-                    if(currentCard) searchEmployee();
-                }
-            } catch (e) {
-                console.error("Data fetch error:", e);
-            }
+                residents = await res.json();
+                updateUIStrings();
+                updateStats();
+            } catch (e) { console.error(e); }
         }
 
         function checkIsResigned(r) {
-            const fullDataString = JSON.stringify(r || {}).toLowerCase();
-            return (
-                fullDataString.includes('အလုပ်ထွက်') ||
-                fullDataString.includes('resigned') ||
-                fullDataString.includes('ไปทำงานอื่น') ||
-                fullDataString.includes('ลาออก') ||
-                fullDataString.includes('ออก') ||
-                fullDataString.includes('လာဘ်') ||
-                fullDataString.includes('(0)')
-            );
+            return JSON.stringify(r || {}).toLowerCase().includes('အလုပ်ထွက်') || JSON.stringify(r || {}).toLowerCase().includes('ลาออก');
         }
 
         function getGenderText(r) {
             const t = translations[currentLang];
-            const allValues = Object.values(r || {}).join(' ');
-            if (allValues.includes('ญ') || allValues.includes('မ') || allValues.toLowerCase().includes('girl') || allValues.toLowerCase().includes('female')) {
-                return t.genderGirl;
-            }
-            return t.genderBoy;
+            return Object.values(r || {}).join(' ').includes('ญ') || Object.values(r || {}).join(' ').includes('မ') ? t.genderGirl : t.genderBoy;
+        }
+
+        function formatPhotoUrl(url) {
+            if (!url) return 'https://via.placeholder.com/300';
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
         }
 
         function searchEmployee() {
@@ -483,7 +385,6 @@
             const previewCard = document.getElementById('room-card-preview');
 
             if (!cardNoInput) {
-                resetForm();
                 previewCard.classList.add('hidden');
                 return;
             }
@@ -492,187 +393,121 @@
             if (found) {
                 document.getElementById('person-name').value = found.name || '';
                 document.getElementById('thai-name').value = found.thaiName || '';
-                
-                const gender = getGenderText(found);
-                const t = translations[currentLang];
-                document.getElementById('gender').value = (gender === t.genderGirl) ? 'မ' : 'ကျား';
+                document.getElementById('gender').value = getGenderText(found) === translations[currentLang].genderGirl ? 'မ' : 'ကျား';
+                document.getElementById('room-no').value = found.roomNo || '';
+                document.getElementById('profile-preview').src = formatPhotoUrl(found.photo);
 
-                const deptSelect = document.getElementById('department');
-                const deptVal = found.department || 'OFFICE';
-                let optionExists = Array.from(deptSelect.options).some(option => option.value === deptVal);
-                if (!optionExists && deptVal) {
-                    let newOption = document.createElement('option');
-                    newOption.value = deptVal;
-                    newOption.text = deptVal;
-                    deptSelect.appendChild(newOption);
-                }
-                deptSelect.value = deptVal;
-
-                const roomNum = found.roomNo || '';
-                document.getElementById('room-no').value = roomNum;
-                
-                const photoSrc = formatPhotoUrl(found.photo);
-                document.getElementById('profile-preview').src = photoSrc;
-
-                if (roomNum && roomNum !== '-' && roomNum !== '') {
+                if (found.roomNo) {
                     previewCard.classList.remove('hidden');
-                    document.getElementById('preview-room-title').innerText = roomNum;
+                    document.getElementById('preview-room-title').innerText = found.roomNo;
+                    const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === found.roomNo.trim().toLowerCase());
+                    const t = translations[currentLang];
+                    document.getElementById('preview-room-members').innerHTML = members.map(m => `
+                        <div class="px-2 py-1 flex justify-between items-center text-[11px] ${String(m.cardNo).trim() === cardNoInput ? 'bg-emerald-100 font-bold' : ''}">
+                            <span>${m.cardNo || ''} ${m.name || ''}</span>
+                            <span class="font-bold ${getGenderText(m) === t.genderGirl ? 'text-pink-600' : 'text-blue-600'}">${getGenderText(m) === t.genderGirl ? 'ญ' : 'ช'}</span>
+                        </div>
+                    `).join('');
+                } else { previewCard.classList.add('hidden'); }
 
-                    const roomMembers = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === roomNum.trim().toLowerCase());
-                    
-                    let membersHTML = roomMembers.map(m => {
-                        const gText = getGenderText(m);
-                        const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
-                        const isCurrentSearch = String(m.cardNo).trim() === cardNoInput;
-                        const highlightClass = isCurrentSearch ? 'bg-emerald-100 font-bold' : '';
-                        return `
-                            <div class="px-2 py-1 flex justify-between items-center text-[11px] ${highlightClass}">
-                                <span class="truncate text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
-                                <span class="text-xs font-bold ${gTag === 'ญ' ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
-                            </div>
-                        `;
-                    }).join('');
-
-                    document.getElementById('preview-room-members').innerHTML = membersHTML || '<div class="text-center text-xs text-gray-400 py-1">-</div>';
-                } else {
-                    previewCard.classList.add('hidden');
-                }
-
-                // ကဒ်နံပါတ် ၅ လုံး အပြည့်အစုံ ရိုက်ပြီးသည်နှင့် ကီးဘုတ် အလိုအလျောက် ပိတ်သွားစေရန် (`blur()`)
-                if (cardNoInput.length >= 5) {
-                    cardInputEl.blur();
-                }
-
-            } else {
-                document.getElementById('person-name').value = '';
-                document.getElementById('thai-name').value = '';
-                document.getElementById('room-no').value = '';
-                document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
-                previewCard.classList.add('hidden');
+                if (cardNoInput.length >= 5) cardInputEl.blur();
             }
         }
 
-        function renderTables() {
-            const tbody = document.getElementById('table-body');
-            const resignedTbody = document.getElementById('resigned-table-body');
-            
-            tbody.innerHTML = '';
-            resignedTbody.innerHTML = '';
-
-            residents.forEach((r) => {
-                const photoSrc = formatPhotoUrl(r.photo);
-                const genderTxt = getGenderText(r);
-                const isResigned = checkIsResigned(r);
-                const t = translations[currentLang];
-
-                const tr = document.createElement('tr');
-
-                if (isResigned) {
-                    tr.innerHTML = `
-                        <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
-                        <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
-                        <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === t.genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
-                        <td class="p-3 font-semibold text-red-600">${r.department || ''}</td>
-                        <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'}</td>
-                    `;
-                    resignedTbody.appendChild(tr);
-                } else {
-                    tr.innerHTML = `
-                        <td class="p-3"><img src="${photoSrc}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
-                        <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
-                        <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === t.genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
-                        <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
-                        <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
-                    `;
-                    tbody.appendChild(tr);
-                }
-            });
+        function updateStats() {
+            const active = residents.filter(r => !checkIsResigned(r));
+            document.getElementById('stat-total').innerText = active.length;
+            const t = translations[currentLang];
+            const girls = active.filter(r => getGenderText(r) === t.genderGirl).length;
+            document.getElementById('stat-boy').innerText = active.length - girls;
+            document.getElementById('stat-girl').innerText = girls;
         }
 
         function switchRoomTab(tabKey) {
             currentRoomTab = tabKey;
-            document.querySelectorAll('.room-tab-btn').forEach(btn => {
-                btn.className = "room-tab-btn bg-gray-100 text-gray-700 hover:bg-emerald-100 px-3 py-1.5 rounded-lg";
-            });
-            const activeBtn = document.getElementById(`tab-${tabKey}`);
-            if (activeBtn) {
-                activeBtn.className = "room-tab-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm font-bold";
-            }
+            document.querySelectorAll('.room-tab-btn').forEach(b => b.className = "room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg");
+            document.getElementById(`tab-${tabKey}`).className = "room-tab-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold";
             renderRoomGrid();
         }
 
         function renderRoomGrid() {
             const container = document.getElementById('room-grid-container');
-            if (!container) return;
             container.innerHTML = '';
-
             const activeList = residents.filter(r => !checkIsResigned(r));
             const t = translations[currentLang];
 
-            const filteredByTab = activeList.filter(r => {
-                const room = String(r.roomNo || '').trim().toUpperCase();
-                
-                if (currentRoomTab === 'OTHER') {
-                    return !room.startsWith('A') && !room.startsWith('B') && !room.startsWith('C') && !room.startsWith('D');
+            // A 1 သို့မဟုတ် တစ်ခုတည်းသောနံပါတ်များ လုံးဝမပါရှိစေဘဲ တောင်းဆိုထားသော အစဉ်အတိုင်း အပြည့်အစုံ ဖန်တီးပေးခြင်း
+            let roomList = [];
+            if (currentRoomTab !== 'OTHER') {
+                for (let i = 1; i <= 3; i++) {
+                    for (let j = 1; j <= 8; j++) {
+                        roomList.push(`${currentRoomTab} ${i}/${j}`);
+                    }
+                    roomList.push(`${currentRoomTab} ${i}`);
+                    for (let j = 9; j <= 16; j++) {
+                        roomList.push(`${currentRoomTab} ${i}/${j}`);
+                    }
                 }
-                return room.startsWith(currentRoomTab);
-            });
+            }
 
             const roomGroups = {};
-            filteredByTab.forEach(r => {
-                const rm = String(r.roomNo || t.unassignedRoom).trim();
-                if (!roomGroups[rm]) {
-                    roomGroups[rm] = [];
-                }
-                roomGroups[rm].push(r);
-            });
+            roomList.forEach(rm => { roomGroups[rm] = []; });
 
-            const sortedRooms = Object.keys(roomGroups).sort((a, b) => {
-                const parseRoom = (str) => {
-                    const parts = str.split(' ');
-                    const namePart = parts[parts.length - 1];
-                    if (namePart.includes('/')) {
-                        const sub = namePart.split('/');
-                        return { major: parseInt(sub[0]) || 0, minor: parseInt(sub[1]) || 0 };
-                    } else {
-                        return { major: parseInt(namePart) || 0, minor: 8.5 };
+            activeList.forEach(r => {
+                let rm = String(r.roomNo || '').trim();
+                if (currentRoomTab === 'OTHER') {
+                    if (!['A', 'B', 'C', 'D'].some(k => rm.toUpperCase().startsWith(k))) {
+                        if (!roomGroups[rm]) roomGroups[rm] = [];
+                        roomGroups[rm].push(r);
                     }
-                };
-                const roomA = parseRoom(a);
-                const roomB = parseRoom(b);
-                if (roomA.major !== roomB.major) return roomA.major - roomB.major;
-                return roomA.minor - roomB.minor;
+                } else {
+                    if (rm.toUpperCase().startsWith(currentRoomTab)) {
+                        let matchedKey = Object.keys(roomGroups).find(k => k.replace(/\s+/g, '').toLowerCase() === rm.replace(/\s+/g, '').toLowerCase());
+                        if (matchedKey) {
+                            roomGroups[matchedKey].push(r);
+                        } else {
+                            if (!roomGroups[rm]) roomGroups[rm] = [];
+                            roomGroups[rm].push(r);
+                        }
+                    }
+                }
             });
 
-            if (sortedRooms.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 font-semibold">${t.noRoomData}${currentRoomTab}</div>`;
-                return;
-            }
+            // A 1, B 1, C 1, D 1 ကဲ့သို့သော တစ်ခုတည်းသောအခန်းနံပါတ်များကို လုံးဝဖယ်ရှားရန် (မည်သည့်လူမှမရှိလျှင် ကတ်ပြားပါ ပျောက်သွားစေရန်)
+            const sortedRooms = Object.keys(roomGroups).filter(roomName => {
+                if ((roomName === "A 1" || roomName === "B 1" || roomName === "C 1" || roomName === "D 1") && roomGroups[roomName].length === 0) {
+                    return false;
+                }
+                return true;
+            });
 
             sortedRooms.forEach(roomName => {
                 const members = roomGroups[roomName];
                 const card = document.createElement('div');
                 card.className = "border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between";
 
-                let membersHTML = members.map(m => {
-                    const gText = getGenderText(m);
-                    const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
-                    return `
-                        <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
-                            <span class="truncate font-semibold text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
-                            <span class="text-xs font-bold ${gTag === 'ญ' ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
-                        </div>
-                    `;
-                }).join('');
+                let membersHTML = '';
+                if (members && members.length > 0) {
+                    membersHTML = members.map(m => {
+                        const gText = getGenderText(m);
+                        const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
+                        return `
+                            <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
+                                <span class="truncate font-semibold text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
+                                <span class="text-xs font-bold ${gTag === 'ญ' ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    membersHTML = `<div class="text-center text-[11px] text-gray-300 py-2">- အခန်းလွတ် -</div>`;
+                }
 
                 card.innerHTML = `
                     <div>
                         <div class="bg-emerald-400 text-emerald-950 font-black text-center py-1 text-sm border-b border-emerald-500 tracking-wider">
                             ${roomName}
                         </div>
-                        <div class="divide-y divide-gray-100 min-h-[60px]">
+                        <div class="divide-y divide-gray-100 min-h-[50px]">
                             ${membersHTML}
                         </div>
                     </div>
@@ -681,27 +516,46 @@
             });
         }
 
-        function updateStats() {
-            const activeList = residents.filter(r => !checkIsResigned(r));
-            document.getElementById('stat-total').innerText = activeList.length;
-
-            const t = translations[currentLang];
-            const girls = activeList.filter(r => getGenderText(r) === t.genderGirl).length;
-            const boys = activeList.length - girls;
-            
-            document.getElementById('stat-boy').innerText = boys;
-            document.getElementById('stat-girl').innerText = girls;
+        function renderActiveTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            residents.forEach(r => {
+                if (!checkIsResigned(r)) {
+                    const genderTxt = getGenderText(r);
+                    const photo = formatPhotoUrl(r.photo);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="p-3"><img src="${photo}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
+                            <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === translations[currentLang].genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
+                            <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
+                            <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
+                        </tr>
+                    `;
+                }
+            });
         }
 
-        function resetForm() {
-            document.getElementById('card-no').value = '';
-            document.getElementById('person-name').value = '';
-            document.getElementById('thai-name').value = '';
-            document.getElementById('gender').value = 'ကျား';
-            document.getElementById('department').value = 'OFFICE';
-            document.getElementById('room-no').value = '';
-            document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
-            document.getElementById('room-card-preview').classList.add('hidden');
+        function renderResignedTable() {
+            const tbody = document.getElementById('resigned-table-body');
+            tbody.innerHTML = '';
+            residents.forEach(r => {
+                if (checkIsResigned(r)) {
+                    const genderTxt = getGenderText(r);
+                    const photo = formatPhotoUrl(r.photo);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="p-3"><img src="${photo}" class="w-12 h-12 rounded-full object-cover border shadow-sm" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
+                            <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === translations[currentLang].genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
+                            <td class="p-3 font-semibold text-red-600">${r.department || ''}</td>
+                            <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'}</td>
+                        </tr>
+                    `;
+                }
+            });
         }
     </script>
 </body>
