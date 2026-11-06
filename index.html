@@ -102,13 +102,13 @@
                                 <!-- Input Fields - Compact Inline Row Format -->
                                 <div class="md:col-span-2 space-y-2.5">
                                     
-                                    <!-- Card No -->
+                                    <!-- Card No with Voice Input support -->
                                     <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-emerald-500">
                                         <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px] sm:min-w-[140px]">
                                             ကဒ်နံပါတ် / ID
                                         </div>
                                         <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                        <input type="text" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-2 py-1.5 text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                        <input type="tel" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160 (သို့) အသံဖြင့်ပြောရန်" class="w-full px-2 py-1.5 text-sm focus:outline-none font-mono font-bold text-gray-800">
                                     </div>
 
                                     <!-- Name Myanmar -->
@@ -295,15 +295,15 @@
                 loginError: "စကားဝပ် အမှားဖြစ်နေပါသည်။ ထပ်မံကြိုးစားပါ။",
                 mainTitle: "ဝန်ထမ်း အချက်အလက် စီမံခန့်ခွဲမှုစနစ်",
                 sectionSearch: "ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်",
-                lblCard: "ကဒ်နံပါတ် / ID (ค้นหาอัตโนมัติ)",
+                lblCard: "ကဒ်နံပါတ် / ID",
                 lblCardPlaceholder: "ဥပမာ - 30160",
                 lblName: "အမည် (မြန်မာ)",
-                lblThaiName: "အမည် (ภาษาไทย)",
+                lblThaiName: "အမည် (ထိုင်း)",
                 lblGender: "ကျား / မ",
                 optBoy: "ကျား (BOY)",
                 optGirl: "မ (GIRL)",
                 lblDept: "ဌာန",
-                lblRoom: "ห้องพัก (ROOM)",
+                lblRoom: "ROOM (အခန်း)",
                 summaryTitle: "စာရင်းအကျဉ်းချုပ် (လက်ရှိ နေထိုင်သူများ)",
                 statTotal: "TOTAL (လက်ရှိ)",
                 statBoy: "BOY (လက်ရှိ)",
@@ -333,7 +333,7 @@
                 loginError: "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
                 mainTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
                 sectionSearch: "ตรวจสอบข้อมูลพนักงาน",
-                lblCard: "รหัสบัตร / ID (ค้นหาอัตโนมัติ)",
+                lblCard: "รหัสบัตร / ID",
                 lblCardPlaceholder: "เช่น - 30160",
                 lblName: "ชื่อ (เมียนมา)",
                 lblThaiName: "ชื่อ (ภาษาไทย)",
@@ -506,7 +506,8 @@
         }
 
         function searchEmployee() {
-            const cardNoInput = document.getElementById('card-no').value.trim();
+            const cardInputEl = document.getElementById('card-no');
+            const cardNoInput = cardInputEl.value.trim();
             const previewCard = document.getElementById('room-card-preview');
 
             if (!cardNoInput) {
@@ -564,6 +565,11 @@
                     document.getElementById('preview-room-members').innerHTML = membersHTML || '<div class="text-center text-xs text-gray-400 py-1">-</div>';
                 } else {
                     previewCard.classList.add('hidden');
+                }
+
+                // အကယ်၍ ကဒ်နံပါတ် ၅ လုံး (ဥပမာ - 30172) အပြည့်အစုံ ရိုက်ပြီးသွားပါက ကီးဘုတ် အလိုအလျောက် ပိတ်သွားစေရန် (`blur()`)
+                if (cardNoInput.length >= 5) {
+                    cardInputEl.blur();
                 }
 
             } else {
