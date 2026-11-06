@@ -79,12 +79,24 @@
                         </h2>
 
                         <div class="border-2 border-gray-800 rounded-xl p-4 bg-gray-50 mb-4">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
                                 
-                                <!-- Profile Image Slot -->
-                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white h-72 relative group">
-                                    <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" class="w-48 h-48 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
-                                    <span class="text-[10px] text-gray-400 mt-1 font-bold">300 * 300 PHOTO</span>
+                                <!-- Profile Image & Room Card Preview Slot -->
+                                <div class="flex flex-col items-center justify-center space-y-3">
+                                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-64 relative group">
+                                        <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" class="w-40 h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm">
+                                        <span class="text-[10px] text-gray-400 mt-1 font-bold">300 * 300 PHOTO</span>
+                                    </div>
+
+                                    <!-- Room Card Preview Box -->
+                                    <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm hidden">
+                                        <div id="preview-room-title" class="bg-emerald-400 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 tracking-wider">
+                                            ROOM
+                                        </div>
+                                        <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px]">
+                                            <!-- Room Members will load here -->
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Input Fields -->
@@ -333,6 +345,9 @@
             renderTables();
             updateStats();
             renderRoomGrid();
+            // Refresh preview if card is active
+            const currentCard = document.getElementById('card-no').value.trim();
+            if(currentCard) searchEmployee();
         }
 
         function updateUIStrings() {
@@ -433,6 +448,10 @@
                     updateStats();
                     renderRoomGrid();
                     document.getElementById('sync-status').innerText = "Google Sheet Sync ✔";
+                    
+                    // Re-trigger search if input has value
+                    const currentCard = document.getElementById('card-no').value.trim();
+                    if(currentCard) searchEmployee();
                 }
             } catch (e) {
                 console.error("Data fetch error:", e);
@@ -464,8 +483,11 @@
 
         function searchEmployee() {
             const cardNoInput = document.getElementById('card-no').value.trim();
+            const previewCard = document.getElementById('room-card-preview');
+
             if (!cardNoInput) {
                 resetForm();
+                previewCard.classList.add('hidden');
                 return;
             }
 
@@ -489,15 +511,44 @@
                 }
                 deptSelect.value = deptVal;
 
-                document.getElementById('room-no').value = found.roomNo || '';
+                const roomNum = found.roomNo || '';
+                document.getElementById('room-no').value = roomNum;
                 
                 const photoSrc = formatPhotoUrl(found.photo);
                 document.getElementById('profile-preview').src = photoSrc;
+
+                // Render Room Card Preview under Profile Photo
+                if (roomNum && roomNum !== '-' && roomNum !== '') {
+                    previewCard.classList.remove('hidden');
+                    document.getElementById('preview-room-title').innerText = roomNum;
+
+                    // Find all active residents in this room
+                    const roomMembers = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === roomNum.trim().toLowerCase());
+                    
+                    let membersHTML = roomMembers.map(m => {
+                        const gText = getGenderText(m);
+                        const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
+                        const isCurrentSearch = String(m.cardNo).trim() === cardNoInput;
+                        const highlightClass = isCurrentSearch ? 'bg-emerald-100 font-bold' : '';
+                        return `
+                            <div class="px-2 py-1 flex justify-between items-center text-[11px] ${highlightClass}">
+                                <span class="truncate text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
+                                <span class="text-xs font-bold ${gTag === 'ญ' ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    document.getElementById('preview-room-members').innerHTML = membersHTML || '<div class="text-center text-xs text-gray-400 py-1">-</div>';
+                } else {
+                    previewCard.classList.add('hidden');
+                }
+
             } else {
                 document.getElementById('person-name').value = '';
                 document.getElementById('thai-name').value = '';
                 document.getElementById('room-no').value = '';
                 document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
+                previewCard.classList.add('hidden');
             }
         }
 
@@ -650,6 +701,7 @@
             document.getElementById('department').value = 'OFFICE';
             document.getElementById('room-no').value = '';
             document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
+            document.getElementById('room-card-preview').classList.add('hidden');
         }
     </script>
 </body>
