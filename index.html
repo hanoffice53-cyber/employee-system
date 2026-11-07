@@ -100,10 +100,14 @@
                             <i class="fa-solid fa-address-card text-emerald-600"></i>
                             <span>ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
                         </h2>
-                        <div class="flex items-center gap-3 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold">
-                            <span id="txt-stat-total" class="text-emerald-700">TOTAL: <strong id="stat-total" class="text-emerald-900 text-sm">0</strong></span>
-                            <span id="txt-stat-boy" class="text-indigo-700">BOY: <strong id="stat-boy" class="text-indigo-900 text-sm">0</strong></span>
-                            <span id="txt-stat-girl" class="text-pink-700">GIRL: <strong id="stat-girl" class="text-pink-900 text-sm">0</strong></span>
+                        <!-- နိုင်ငံအလိုက် စုစုပေါင်း စာရင်းပြသရန် -->
+                        <div class="flex flex-wrap items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold">
+                            <span class="text-emerald-700"><span id="lbl-stat-myanmar">မြန်မာ</span>: <strong id="stat-total" class="text-emerald-900 text-sm">0</strong></span>
+                            <span class="text-indigo-700">BOY: <strong id="stat-boy" class="text-indigo-900 text-sm">0</strong></span>
+                            <span class="text-pink-700">GIRL: <strong id="stat-girl" class="text-pink-900 text-sm">0</strong></span>
+                            <span class="text-gray-300">|</span>
+                            <span class="text-amber-700"><span id="lbl-stat-cambodia">ကမ္ဘောဒီးယား</span>: <strong id="stat-cambodia" class="text-amber-900 text-sm">0</strong></span>
+                            <span class="text-purple-700"><span id="lbl-stat-laos">လာအို</span>: <strong id="stat-laos" class="text-purple-900 text-sm">0</strong></span>
                         </div>
                     </div>
 
@@ -182,10 +186,18 @@
 
             <!-- SECTION 3: ACTIVE RESIDENTS TABLE -->
             <div id="section-active" class="app-section space-y-4 hidden">
-                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5">
-                    <h2 id="txt-active-table" class="text-lg font-bold text-emerald-800 mb-4 border-b pb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-emerald-600"></i> <span>လက်ရှိ နေထိုင်သူများ စာရင်း</span>
-                    </h2>
+                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
+                        <h2 id="txt-active-table" class="text-lg font-bold text-emerald-800 flex items-center gap-2">
+                            <i class="fa-solid fa-users text-emerald-600"></i> <span>လက်ရှိ နေထိုင်သူများ စာရင်း</span>
+                        </h2>
+                        <!-- နိုင်ငံအလိုက် စာရင်းခွဲကြည့်ရန် Filter Tabs -->
+                        <div class="flex gap-2 text-xs font-bold">
+                            <button onclick="switchActiveNationality('Myanmar')" id="nat-myanmar" class="nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm">မြန်မာ</button>
+                            <button onclick="switchActiveNationality('Cambodia')" id="nat-cambodia" class="nat-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">ကမ္ဘောဒီးယား</button>
+                            <button onclick="switchActiveNationality('Laos')" id="nat-laos" class="nat-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">လာအို</button>
+                        </div>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
@@ -238,7 +250,8 @@
         
         let residents = [];
         let currentRoomTab = 'A';
-        let currentLang = localStorage.getItem('app_lang') || 'my'; // 'my' သို့မဟုတ် 'th'
+        let currentActiveNationality = 'Myanmar'; 
+        let currentLang = localStorage.getItem('app_lang') || 'my'; 
         let activeModalRoomNo = '';
         let lastSearchedCard = '';
 
@@ -274,7 +287,10 @@
                 modalRoomDetails: "အခန်း အသေးစိတ်",
                 closeBtn: "ပိတ်မည်",
                 deptLabel: "ဌာန",
-                emptyRoom: "- ဤအခန်းတွင် လူမရှိသေးပါ -"
+                emptyRoom: "- ဤအခန်းတွင် လူမရှိသေးပါ -",
+                natMyanmar: "မြန်မာ",
+                natCambodia: "ကမ္ဘောဒီးယား",
+                natLaos: "လာအို"
             },
             th: {
                 pageTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
@@ -307,7 +323,10 @@
                 modalRoomDetails: "รายละเอียดห้องพัก",
                 closeBtn: "ปิด",
                 deptLabel: "แผนก",
-                emptyRoom: "- ไม่มีผู้พักอาศัยในห้องนี้ -"
+                emptyRoom: "- ไม่มีผู้พักอาศัยในห้องนี้ -",
+                natMyanmar: "เมียนมา",
+                natCambodia: "กัมพูชา",
+                natLaos: "ลาว"
             }
         };
 
@@ -334,6 +353,18 @@
             if (tabId === 'rooms') renderRoomGrid();
             if (tabId === 'active') renderActiveTable();
             if (tabId === 'resigned') renderResignedTable();
+        }
+
+        function switchActiveNationality(nat) {
+            currentActiveNationality = nat;
+            document.querySelectorAll('.nat-btn').forEach(b => {
+                b.className = "nat-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg";
+            });
+            if(nat === 'Myanmar') document.getElementById('nat-myanmar').className = "nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm";
+            if(nat === 'Cambodia') document.getElementById('nat-cambodia').className = "nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm";
+            if(nat === 'Laos') document.getElementById('nat-laos').className = "nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm";
+            
+            renderActiveTable();
         }
 
         function toggleLanguage() {
@@ -395,6 +426,15 @@
 
             document.getElementById('txt-zoom-instruction').innerText = t.zoomInstruction;
             document.getElementById('txt-close-btn').innerText = t.closeBtn;
+
+            // နိုင်ငံအလိုက် ခလုတ်စာသားများအား ဘာသာစကားအလိုက် အတိအကျပြောင်းလဲခြင်း
+            document.getElementById('nat-myanmar').innerText = t.natMyanmar;
+            document.getElementById('nat-cambodia').innerText = t.natCambodia;
+            document.getElementById('nat-laos').innerText = t.natLaos;
+
+            document.getElementById('lbl-stat-myanmar').innerText = t.natMyanmar;
+            document.getElementById('lbl-stat-cambodia').innerText = t.natCambodia;
+            document.getElementById('lbl-stat-laos').innerText = t.natLaos;
         }
 
         async function loadData() {
@@ -408,6 +448,20 @@
 
         function checkIsResigned(r) {
             return JSON.stringify(r || {}).toLowerCase().includes('အလုပ်ထွက်') || JSON.stringify(r || {}).toLowerCase().includes('ลาออก');
+        }
+
+        // ကော်လံ H သို့မဟုတ် စာကြောင်းတစ်ခုလုံးပါ တန်ဖိုးများကို အသေးစိတ် စစ်ဆေးခြင်း
+        function getNationality(r) {
+            const str = JSON.stringify(r || {}).toLowerCase();
+            // ကမ္ဘောဒီးယား
+            if (str.includes('ကမ္ဘောဒီးယား') || str.includes('cambodia') || str.includes('กัมพูชา')) {
+                return 'Cambodia';
+            }
+            // လာအို
+            if (str.includes('လာအို') || str.includes('laos') || str.includes('ลาว')) {
+                return 'Laos';
+            }
+            return 'Myanmar';
         }
 
         function getGenderText(r) {
@@ -451,12 +505,22 @@
                     const isGirl = gText.includes('မ') || gText.includes('หญิง') || gText.includes('ស្រី') || gText.includes('ຍິງ');
                     const gTag = isGirl ? 'ญ' : 'ช';
                     const photo = formatPhotoUrl(m.photo);
+                    const nat = getNationality(m);
+                    
+                    let natText = t.natMyanmar;
+                    if (nat === 'Cambodia') natText = t.natCambodia;
+                    if (nat === 'Laos') natText = t.natLaos;
+
+                    const natBadge = nat === 'Myanmar' ? '' : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${nat === 'Cambodia' ? 'bg-amber-100 text-amber-800' : 'bg-purple-100 text-purple-800'}">${natText}</span>`;
                     return `
                         <div class="flex items-center gap-4 p-3 hover:bg-emerald-50 rounded-xl transition">
                             <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-mono font-bold text-sm text-emerald-800">${m.cardNo || ''}</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-mono font-bold text-sm text-emerald-800">${m.cardNo || ''}</span>
+                                        ${natBadge}
+                                    </div>
                                     <span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'}">${gTag} (${gText})</span>
                                 </div>
                                 <div class="font-bold text-gray-800 text-base mt-0.5">${m.name || ''}</div>
@@ -549,15 +613,24 @@
             }
         }
 
+        // စုစုပေါင်း အရေအတွက်တွက်ချက်ခြင်း
         function updateStats() {
             const active = residents.filter(r => !checkIsResigned(r));
-            document.getElementById('stat-total').innerText = active.length;
-            const girls = active.filter(r => {
+            
+            const myanmarList = active.filter(r => getNationality(r) === 'Myanmar');
+            const cambodiaList = active.filter(r => getNationality(r) === 'Cambodia');
+            const laosList = active.filter(r => getNationality(r) === 'Laos');
+
+            document.getElementById('stat-total').innerText = myanmarList.length;
+            const girls = myanmarList.filter(r => {
                 const gt = getGenderText(r);
                 return gt.includes('မ') || gt.includes('หญิง') || gt.includes('ស្រី') || gt.includes('ຍິງ');
             }).length;
-            document.getElementById('stat-boy').innerText = active.length - girls;
+            document.getElementById('stat-boy').innerText = myanmarList.length - girls;
             document.getElementById('stat-girl').innerText = girls;
+
+            document.getElementById('stat-cambodia').innerText = cambodiaList.length;
+            document.getElementById('stat-laos').innerText = laosList.length;
         }
 
         function switchRoomTab(tabKey) {
@@ -626,9 +699,14 @@
                         const gText = getGenderText(m);
                         const isGirl = gText.includes('မ') || gText.includes('หญิง') || gText.includes('ស្រី') || gText.includes('ຍິງ');
                         const gTag = isGirl ? 'ญ' : 'ช';
+                        const nat = getNationality(m);
+                        const dotColor = nat === 'Myanmar' ? 'bg-emerald-500' : (nat === 'Cambodia' ? 'bg-amber-500' : 'bg-purple-500');
                         return `
-                            <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
-                                <span class="truncate font-semibold text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
+                            <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50" title="${nat}">
+                                <span class="truncate font-semibold text-gray-800 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full ${dotColor}"></span>
+                                    ${m.cardNo || ''} ${m.name || ''}
+                                </span>
                                 <span class="text-xs font-bold ${isGirl ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
                             </div>
                         `;
@@ -652,44 +730,53 @@
             });
         }
 
+        // ရွေးချယ်ထားသော နိုင်ငံအလိုက် လက်ရှိစာရင်းဇယား ဖော်ပြခြင်း
         function renderActiveTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-            residents.forEach(r => {
-                if (!checkIsResigned(r)) {
-                    const genderTxt = getGenderText(r);
-                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง') || genderTxt.includes('ស្រី') || genderTxt.includes('ຍິງ');
-                    const photo = formatPhotoUrl(r.photo);
-                    tbody.innerHTML += `
-                        <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
-                            <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
-                            <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
-                            <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
-                            <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
-                        </tr>
-                    `;
-                }
+            
+            const filteredList = residents.filter(r => !checkIsResigned(r) && getNationality(r) === currentActiveNationality);
+
+            filteredList.forEach(r => {
+                const genderTxt = getGenderText(r);
+                const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง') || genderTxt.includes('ស្រី') || genderTxt.includes('ຍິງ');
+                const photo = formatPhotoUrl(r.photo);
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
+                        <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
+                        <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
+                        <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
+                        <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
+                    </tr>
+                `;
             });
         }
 
         function renderResignedTable() {
             const tbody = document.getElementById('resigned-table-body');
             tbody.innerHTML = '';
+            const t = translations[currentLang];
             residents.forEach(r => {
                 if (checkIsResigned(r)) {
                     const genderTxt = getGenderText(r);
                     const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง') || genderTxt.includes('ស្រី') || genderTxt.includes('ຍິງ');
                     const photo = formatPhotoUrl(r.photo);
+                    const nat = getNationality(r);
+                    
+                    let natText = t.natMyanmar;
+                    if (nat === 'Cambodia') natText = t.natCambodia;
+                    if (nat === 'Laos') natText = t.natLaos;
+
                     tbody.innerHTML += `
                         <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
                             <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
                             <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
                             <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
                             <td class="p-3 font-semibold text-red-600">${r.department || ''}</td>
-                            <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'}</td>
+                            <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'} <span class="text-[10px] text-gray-400">(${natText})</span></td>
                         </tr>
                     `;
                 }
