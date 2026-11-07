@@ -172,6 +172,7 @@
                             <button onclick="switchRoomTab('B')" id="tab-B" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room B</button>
                             <button onclick="switchRoomTab('C')" id="tab-C" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room C</button>
                             <button onclick="switchRoomTab('D')" id="tab-D" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room D</button>
+                            <button onclick="switchRoomTab('E')" id="tab-E" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Room E</button>
                             <button onclick="switchRoomTab('OTHER')" id="tab-OTHER" class="room-tab-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">အခြား</button>
                         </div>
                     </div>
@@ -237,7 +238,7 @@
         
         let residents = [];
         let currentRoomTab = 'A';
-        let currentLang = localStorage.getItem('app_lang') || 'my';
+        let currentLang = localStorage.getItem('app_lang') || 'my'; // 'my' သို့မဟုတ် 'th'
         let activeModalRoomNo = '';
         let lastSearchedCard = '';
 
@@ -271,7 +272,6 @@
                 genderGirl: "မ (GIRL)",
                 zoomInstruction: "ပိတ်ရန် ဤပုံပေါ် (သို့) အပြင်ဘက်သို့ နှိပ်ပါ",
                 modalRoomDetails: "အခန်း အသေးစိတ်",
-                residentsOf: "နေထိုင်သူများ",
                 closeBtn: "ပိတ်မည်",
                 deptLabel: "ဌာန",
                 emptyRoom: "- ဤအခန်းတွင် လူမရှိသေးပါ -"
@@ -305,7 +305,6 @@
                 genderGirl: "หญิง (GIRL)",
                 zoomInstruction: "คลิกที่รูปภาพหรือด้านนอกเพื่อปิด",
                 modalRoomDetails: "รายละเอียดห้องพัก",
-                residentsOf: "ผู้พักอาศัยห้อง",
                 closeBtn: "ปิด",
                 deptLabel: "แผนก",
                 emptyRoom: "- ไม่มีผู้พักอาศัยในห้องนี้ -"
@@ -358,6 +357,7 @@
             document.getElementById('html-root').setAttribute('lang', currentLang);
             document.body.style.fontFamily = currentLang === 'th' ? "'Sarabun', sans-serif" : "'Padauk', 'Sarabun', sans-serif";
 
+            document.getElementById('lang-label').innerText = currentLang === 'my' ? "မြန်မာ / ไทย" : "ไทย / မြန်မာ";
             document.getElementById('page-title').innerText = t.pageTitle;
             document.getElementById('nav-check').innerText = t.navCheck;
             document.getElementById('nav-rooms').innerText = t.navRooms;
@@ -412,7 +412,7 @@
 
         function getGenderText(r) {
             const t = translations[currentLang];
-            const isGirl = Object.values(r || {}).join(' ').includes('ญ') || Object.values(r || {}).join(' ').includes('မ');
+            const isGirl = Object.values(r || {}).join(' ').includes('ญ') || Object.values(r || {}).join(' ').includes('မ') || Object.values(r || {}).join(' ').includes('ស្រី') || Object.values(r || {}).join(' ').includes('ຍິງ');
             return isGirl ? t.genderGirl : t.genderBoy;
         }
 
@@ -448,12 +448,12 @@
             } else {
                 listEl.innerHTML = members.map(m => {
                     const gText = getGenderText(m);
-                    const isGirl = gText.includes('မ') || gText.includes('หญิง');
+                    const isGirl = gText.includes('မ') || gText.includes('หญิง') || gText.includes('ស្រី') || gText.includes('ຍິງ');
                     const gTag = isGirl ? 'ญ' : 'ช';
                     const photo = formatPhotoUrl(m.photo);
                     return `
                         <div class="flex items-center gap-4 p-3 hover:bg-emerald-50 rounded-xl transition">
-                            <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="${currentLang === 'th' ? 'คลิกเพื่อดูรูปใหญ่' : 'ဖိနှိပ်၍ ပုံအကြီးကြည့်ရန်'}" onerror="this.src='https://via.placeholder.com/300'">
+                            <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between">
                                     <span class="font-mono font-bold text-sm text-emerald-800">${m.cardNo || ''}</span>
@@ -518,10 +518,9 @@
                     previewCard.classList.add('opacity-100');
                     document.getElementById('preview-room-title').innerText = found.roomNo;
                     const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === found.roomNo.trim().toLowerCase());
-                    const t = translations[currentLang];
                     document.getElementById('preview-room-members').innerHTML = members.map(m => {
                         const gText = getGenderText(m);
-                        const isGirl = gText.includes('မ') || gText.includes('หญิง');
+                        const isGirl = gText.includes('မ') || gText.includes('หญิง') || gText.includes('ស្រី') || gText.includes('ຍິງ');
                         const gTag = isGirl ? 'ญ' : 'ช';
                         return `
                             <div onclick="openRoomModal('${found.roomNo}')" class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-100 cursor-pointer transition ${String(m.cardNo).trim() === cardNoInput ? 'bg-emerald-50 font-bold' : ''}">
@@ -553,8 +552,10 @@
         function updateStats() {
             const active = residents.filter(r => !checkIsResigned(r));
             document.getElementById('stat-total').innerText = active.length;
-            const t = translations[currentLang];
-            const girls = active.filter(r => getGenderText(r).includes('မ') || getGenderText(r).includes('หญิง')).length;
+            const girls = active.filter(r => {
+                const gt = getGenderText(r);
+                return gt.includes('မ') || gt.includes('หญิง') || gt.includes('ស្រី') || gt.includes('ຍິງ');
+            }).length;
             document.getElementById('stat-boy').innerText = active.length - girls;
             document.getElementById('stat-girl').innerText = girls;
         }
@@ -570,7 +571,6 @@
             const container = document.getElementById('room-grid-container');
             container.innerHTML = '';
             const activeList = residents.filter(r => !checkIsResigned(r));
-            const t = translations[currentLang];
 
             let roomList = [];
             if (currentRoomTab !== 'OTHER') {
@@ -591,7 +591,7 @@
             activeList.forEach(r => {
                 let rm = String(r.roomNo || '').trim();
                 if (currentRoomTab === 'OTHER') {
-                    if (!['A', 'B', 'C', 'D'].some(k => rm.toUpperCase().startsWith(k))) {
+                    if (!['A', 'B', 'C', 'D', 'E'].some(k => rm.toUpperCase().startsWith(k))) {
                         if (!roomGroups[rm]) roomGroups[rm] = [];
                         roomGroups[rm].push(r);
                     }
@@ -609,7 +609,7 @@
             });
 
             const sortedRooms = Object.keys(roomGroups).filter(roomName => {
-                if ((roomName === "A 1" || roomName === "B 1" || roomName === "C 1" || roomName === "D 1") && roomGroups[roomName].length === 0) {
+                if ((roomName === "A 1" || roomName === "B 1" || roomName === "C 1" || roomName === "D 1" || roomName === "E 1") && roomGroups[roomName].length === 0) {
                     return false;
                 }
                 return true;
@@ -624,7 +624,7 @@
                 if (members && members.length > 0) {
                     membersHTML = members.map(m => {
                         const gText = getGenderText(m);
-                        const isGirl = gText.includes('မ') || gText.includes('หญิง');
+                        const isGirl = gText.includes('မ') || gText.includes('หญิง') || gText.includes('ស្រី') || gText.includes('ຍິງ');
                         const gTag = isGirl ? 'ญ' : 'ช';
                         return `
                             <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
@@ -634,7 +634,8 @@
                         `;
                     }).join('');
                 } else {
-                    membersHTML = `<div class="text-center text-[11px] text-gray-300 py-2">${currentLang === 'th' ? '- ห้องว่าง -' : '- အခန်းလွတ် -'}</div>`;
+                    let emptyText = currentLang === 'th' ? "- ห้องว่าง -" : "- အခန်းလွတ် -";
+                    membersHTML = `<div class="text-center text-[11px] text-gray-300 py-2">${emptyText}</div>`;
                 }
 
                 card.innerHTML = `
@@ -657,11 +658,11 @@
             residents.forEach(r => {
                 if (!checkIsResigned(r)) {
                     const genderTxt = getGenderText(r);
-                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง');
+                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง') || genderTxt.includes('ស្រី') || genderTxt.includes('ຍິງ');
                     const photo = formatPhotoUrl(r.photo);
                     tbody.innerHTML += `
                         <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${currentLang === 'th' ? 'คลิกเพื่อดูรูปใหญ่' : 'ပုံကို နှိပ်၍ အကြီးကြည့်ရန်'}" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
                             <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
                             <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
                             <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
@@ -675,16 +676,15 @@
 
         function renderResignedTable() {
             const tbody = document.getElementById('resigned-table-body');
-            tbody.innerHTML = 'กองทัพ';
             tbody.innerHTML = '';
             residents.forEach(r => {
                 if (checkIsResigned(r)) {
                     const genderTxt = getGenderText(r);
-                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง');
+                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง') || genderTxt.includes('ស្រី') || genderTxt.includes('ຍິງ');
                     const photo = formatPhotoUrl(r.photo);
                     tbody.innerHTML += `
                         <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${currentLang === 'th' ? 'คลิกเพื่อดูรูปใหญ่' : 'ပုံကို နှိပ်၍ အကြီးကြည့်ရန်'}" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
                             <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
                             <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
                             <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
