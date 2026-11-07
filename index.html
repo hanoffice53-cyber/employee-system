@@ -45,7 +45,7 @@
         <div class="bg-white rounded-2xl p-5 w-full max-w-lg shadow-2xl border border-gray-100 space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 id="modal-room-title" class="text-lg font-black text-emerald-800 flex items-center gap-2">
-                    <i class="fa-solid fa-door-open text-emerald-600"></i> <span>အခန်း အသေးစိတ်</span>
+                    <i class="fa-solid fa-door-open text-emerald-600"></i> <span id="txt-modal-room-heading">အခန်း အသေးစိတ်</span>
                 </h3>
                 <button onclick="closeRoomModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 flex items-center justify-center transition">
                     <i class="fa-solid fa-xmark"></i>
@@ -55,7 +55,7 @@
                 <!-- Members with Large Photos will load here -->
             </div>
             <div class="border-t pt-3 text-center">
-                <button onclick="closeRoomModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md transition">
+                <button onclick="closeRoomModal()" id="txt-close-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md transition">
                     ပိတ်မည်
                 </button>
             </div>
@@ -66,7 +66,7 @@
     <div id="photo-zoom-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 hidden" onclick="closePhotoZoom()">
         <div class="relative max-w-full max-h-full flex flex-col items-center">
             <img id="zoomed-photo" src="" class="max-w-[90vw] max-h-[85vh] rounded-2xl object-contain border-4 border-white shadow-2xl">
-            <p class="text-white text-xs mt-3 bg-black bg-opacity-50 px-4 py-1.5 rounded-full">ပိတ်ရန် ဤပုံပေါ် (သို့) အပြင်ဘက်သို့ နှိပ်ပါ</p>
+            <p id="txt-zoom-instruction" class="text-white text-xs mt-3 bg-black bg-opacity-50 px-4 py-1.5 rounded-full">ပိတ်ရန် ဤပုံပေါ် (သို့) အပြင်ဘက်သို့ နှိပ်ပါ</p>
         </div>
     </div>
 
@@ -141,10 +141,7 @@
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                                     <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ကျား / မ</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <select id="gender" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" disabled>
-                                        <option value="ကျား" id="opt-boy">ကျား (BOY)</option>
-                                        <option value="မ" id="opt-girl">မ (GIRL)</option>
-                                    </select>
+                                    <input type="text" id="gender" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                                     <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ဌာန</div>
@@ -242,6 +239,7 @@
         let currentRoomTab = 'A';
         let currentLang = localStorage.getItem('app_lang') || 'my';
         let activeModalRoomNo = '';
+        let lastSearchedCard = '';
 
         const translations = {
             my: {
@@ -256,8 +254,6 @@
                 lblName: "အမည် (မြန်မာ)",
                 lblThaiName: "အမည် (ထိုင်း)",
                 lblGender: "ကျား / မ",
-                optBoy: "ကျား (BOY)",
-                optGirl: "မ (GIRL)",
                 lblDept: "ဌာန",
                 lblRoom: "ROOM (အခန်း)",
                 gridTitle: "အခန်းများအလိုက် ကြည့်ရှုရန် (Room Grid View)",
@@ -271,8 +267,14 @@
                 thDept: "ဌာန",
                 thRoom: "အခန်း",
                 thRoomStatus: "အခန်း/အခြေအနေ",
-                genderBoy: "ကျား",
-                genderGirl: "မ"
+                genderBoy: "ကျား (BOY)",
+                genderGirl: "မ (GIRL)",
+                zoomInstruction: "ပိတ်ရန် ဤပုံပေါ် (သို့) အပြင်ဘက်သို့ နှိပ်ပါ",
+                modalRoomDetails: "အခန်း အသေးစိတ်",
+                residentsOf: "နေထိုင်သူများ",
+                closeBtn: "ပိတ်မည်",
+                deptLabel: "ဌာန",
+                emptyRoom: "- ဤအခန်းတွင် လူမရှိသေးပါ -"
             },
             th: {
                 pageTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
@@ -286,8 +288,6 @@
                 lblName: "ชื่อ (เมียนมา)",
                 lblThaiName: "ชื่อ (ภาษาไทย)",
                 lblGender: "เพศ",
-                optBoy: "ชาย (BOY)",
-                optGirl: "หญิง (GIRL)",
                 lblDept: "แผนก",
                 lblRoom: "ห้องพัก (ROOM)",
                 gridTitle: "มุมมองผังห้องพัก (Room Grid View)",
@@ -301,8 +301,14 @@
                 thDept: "แผนก",
                 thRoom: "ห้องพัก",
                 thRoomStatus: "ห้องพัก / สถานะ",
-                genderBoy: "ชาย",
-                genderGirl: "หญิง"
+                genderBoy: "ชาย (BOY)",
+                genderGirl: "หญิง (GIRL)",
+                zoomInstruction: "คลิกที่รูปภาพหรือด้านนอกเพื่อปิด",
+                modalRoomDetails: "รายละเอียดห้องพัก",
+                residentsOf: "ผู้พักอาศัยห้อง",
+                closeBtn: "ปิด",
+                deptLabel: "แผนก",
+                emptyRoom: "- ไม่มีผู้พักอาศัยในห้องนี้ -"
             }
         };
 
@@ -336,11 +342,15 @@
             localStorage.setItem('app_lang', currentLang);
             updateUIStrings();
             updateStats();
-            const currentCard = document.getElementById('card-no').value.trim();
-            if(currentCard) searchEmployee();
+            if(lastSearchedCard) {
+                searchEmployee(lastSearchedCard);
+            }
             if(!document.getElementById('section-rooms').classList.contains('hidden')) renderRoomGrid();
             if(!document.getElementById('section-active').classList.contains('hidden')) renderActiveTable();
             if(!document.getElementById('section-resigned').classList.contains('hidden')) renderResignedTable();
+            if(!document.getElementById('room-detail-modal').classList.contains('hidden') && activeModalRoomNo) {
+                openRoomModal(activeModalRoomNo);
+            }
         }
 
         function updateUIStrings() {
@@ -360,8 +370,6 @@
             document.getElementById('lbl-name').innerText = t.lblName;
             document.getElementById('lbl-thai-name').innerText = t.lblThaiName;
             document.getElementById('lbl-gender').innerText = t.lblGender;
-            document.getElementById('opt-boy').innerText = t.optBoy;
-            document.getElementById('opt-girl').innerText = t.optGirl;
             document.getElementById('lbl-dept').innerText = t.lblDept;
             document.getElementById('lbl-room').innerText = t.lblRoom;
 
@@ -384,6 +392,9 @@
             document.getElementById('th-r-gender').innerText = t.thGender;
             document.getElementById('th-r-dept').innerText = t.thDept;
             document.getElementById('th-r-room').innerText = t.thRoomStatus;
+
+            document.getElementById('txt-zoom-instruction').innerText = t.zoomInstruction;
+            document.getElementById('txt-close-btn').innerText = t.closeBtn;
         }
 
         async function loadData() {
@@ -401,7 +412,8 @@
 
         function getGenderText(r) {
             const t = translations[currentLang];
-            return Object.values(r || {}).join(' ').includes('ญ') || Object.values(r || {}).join(' ').includes('မ') ? t.genderGirl : t.genderBoy;
+            const isGirl = Object.values(r || {}).join(' ').includes('ญ') || Object.values(r || {}).join(' ').includes('မ');
+            return isGirl ? t.genderGirl : t.genderBoy;
         }
 
         function formatPhotoUrl(url) {
@@ -425,30 +437,31 @@
             const modal = document.getElementById('room-detail-modal');
             const titleEl = document.getElementById('modal-room-title');
             const listEl = document.getElementById('modal-room-members-list');
-
-            titleEl.innerHTML = `<i class="fa-solid fa-door-open text-emerald-600"></i> <span>အခန်း (${roomNo}) နေထိုင်သူများ</span>`;
-
-            const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === roomNo.trim().toLowerCase());
             const t = translations[currentLang];
 
+            titleEl.innerHTML = `<i class="fa-solid fa-door-open text-emerald-600"></i> <span>${t.modalRoomDetails} (${roomNo})</span>`;
+
+            const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === roomNo.trim().toLowerCase());
+
             if (members.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm">- ဤအခန်းတွင် လူမရှိသေးပါ -</div>`;
+                listEl.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm">${t.emptyRoom}</div>`;
             } else {
                 listEl.innerHTML = members.map(m => {
                     const gText = getGenderText(m);
-                    const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
+                    const isGirl = gText.includes('မ') || gText.includes('หญิง');
+                    const gTag = isGirl ? 'ญ' : 'ช';
                     const photo = formatPhotoUrl(m.photo);
                     return `
                         <div class="flex items-center gap-4 p-3 hover:bg-emerald-50 rounded-xl transition">
-                            <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="ဖိနှိပ်၍ ပုံအကြီးကြည့်ရန်" onerror="this.src='https://via.placeholder.com/300'">
+                            <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="${currentLang === 'th' ? 'คลิกเพื่อดูรูปใหญ่' : 'ဖိနှိပ်၍ ပုံအကြီးကြည့်ရန်'}" onerror="this.src='https://via.placeholder.com/300'">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between">
                                     <span class="font-mono font-bold text-sm text-emerald-800">${m.cardNo || ''}</span>
-                                    <span class="px-2 py-0.5 rounded-full text-xs font-bold ${gTag === 'ญ' ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'}">${gTag} (${gText})</span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'}">${gTag} (${gText})</span>
                                 </div>
                                 <div class="font-bold text-gray-800 text-base mt-0.5">${m.name || ''}</div>
                                 <div class="text-xs text-blue-900 font-semibold">${m.thaiName || ''}</div>
-                                <div class="text-xs text-gray-500 mt-1">ဌာန: <span class="font-semibold text-gray-700">${m.department || 'OFFICE'}</span></div>
+                                <div class="text-xs text-gray-500 mt-1">${t.deptLabel}: <span class="font-semibold text-gray-700">${m.department || 'OFFICE'}</span></div>
                             </div>
                         </div>
                     `;
@@ -468,9 +481,13 @@
             }
         }
 
-        function searchEmployee() {
+        function searchEmployee(targetCard = null) {
             const cardInputEl = document.getElementById('card-no');
-            const cardNoInput = cardInputEl.value.trim();
+            const cardNoInput = targetCard !== null ? targetCard : cardInputEl.value.trim();
+            if(targetCard !== null && cardInputEl.value !== targetCard) {
+                cardInputEl.value = targetCard;
+            }
+            lastSearchedCard = cardNoInput;
             const previewCard = document.getElementById('room-card-preview');
 
             if (!cardNoInput) {
@@ -478,6 +495,7 @@
                 previewCard.classList.add('opacity-0');
                 document.getElementById('person-name').value = '';
                 document.getElementById('thai-name').value = '';
+                document.getElementById('gender').value = '';
                 document.getElementById('department').value = '';
                 document.getElementById('room-no').value = '';
                 document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
@@ -489,7 +507,7 @@
             if (found) {
                 document.getElementById('person-name').value = found.name || '';
                 document.getElementById('thai-name').value = found.thaiName || '';
-                document.getElementById('gender').value = getGenderText(found) === translations[currentLang].genderGirl ? 'မ' : 'ကျား';
+                document.getElementById('gender').value = getGenderText(found);
                 document.getElementById('department').value = found.department || '';
                 document.getElementById('room-no').value = found.roomNo || '';
                 document.getElementById('profile-preview').src = formatPhotoUrl(found.photo);
@@ -501,19 +519,34 @@
                     document.getElementById('preview-room-title').innerText = found.roomNo;
                     const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === found.roomNo.trim().toLowerCase());
                     const t = translations[currentLang];
-                    document.getElementById('preview-room-members').innerHTML = members.map(m => `
-                        <div onclick="openRoomModal('${found.roomNo}')" class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-100 cursor-pointer transition ${String(m.cardNo).trim() === cardNoInput ? 'bg-emerald-50 font-bold' : ''}">
-                            <span>${m.cardNo || ''} ${m.name || ''}</span>
-                            <span class="font-bold ${getGenderText(m) === t.genderGirl ? 'text-pink-600' : 'text-blue-600'}">${getGenderText(m) === t.genderGirl ? 'ญ' : 'ช'}</span>
-                        </div>
-                    `).join('');
+                    document.getElementById('preview-room-members').innerHTML = members.map(m => {
+                        const gText = getGenderText(m);
+                        const isGirl = gText.includes('မ') || gText.includes('หญิง');
+                        const gTag = isGirl ? 'ญ' : 'ช';
+                        return `
+                            <div onclick="openRoomModal('${found.roomNo}')" class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-100 cursor-pointer transition ${String(m.cardNo).trim() === cardNoInput ? 'bg-emerald-50 font-bold' : ''}">
+                                <span>${m.cardNo || ''} ${m.name || ''}</span>
+                                <span class="font-bold ${isGirl ? 'text-pink-600' : 'text-blue-600'}">${gTag}</span>
+                            </div>
+                        `;
+                    }).join('');
                 } else { 
                     previewCard.classList.remove('opacity-100');
                     previewCard.classList.add('opacity-0');
                     activeModalRoomNo = '';
                 }
 
-                if (cardNoInput.length >= 5) cardInputEl.blur();
+                if (cardNoInput.length >= 5 && targetCard === null) cardInputEl.blur();
+            } else {
+                document.getElementById('person-name').value = '';
+                document.getElementById('thai-name').value = '';
+                document.getElementById('gender').value = '';
+                document.getElementById('department').value = '';
+                document.getElementById('room-no').value = '';
+                document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
+                previewCard.classList.remove('opacity-100');
+                previewCard.classList.add('opacity-0');
+                activeModalRoomNo = '';
             }
         }
 
@@ -521,7 +554,7 @@
             const active = residents.filter(r => !checkIsResigned(r));
             document.getElementById('stat-total').innerText = active.length;
             const t = translations[currentLang];
-            const girls = active.filter(r => getGenderText(r) === t.genderGirl).length;
+            const girls = active.filter(r => getGenderText(r).includes('မ') || getGenderText(r).includes('หญิง')).length;
             document.getElementById('stat-boy').innerText = active.length - girls;
             document.getElementById('stat-girl').innerText = girls;
         }
@@ -591,16 +624,17 @@
                 if (members && members.length > 0) {
                     membersHTML = members.map(m => {
                         const gText = getGenderText(m);
-                        const gTag = (gText === t.genderGirl) ? 'ญ' : 'ช';
+                        const isGirl = gText.includes('မ') || gText.includes('หญิง');
+                        const gTag = isGirl ? 'ญ' : 'ช';
                         return `
                             <div class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-50">
                                 <span class="truncate font-semibold text-gray-800">${m.cardNo || ''} ${m.name || ''}</span>
-                                <span class="text-xs font-bold ${gTag === 'ญ' ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
+                                <span class="text-xs font-bold ${isGirl ? 'text-pink-600' : 'text-blue-600'} ml-1">${gTag}</span>
                             </div>
                         `;
                     }).join('');
                 } else {
-                    membersHTML = `<div class="text-center text-[11px] text-gray-300 py-2">- အခန်းလွတ် -</div>`;
+                    membersHTML = `<div class="text-center text-[11px] text-gray-300 py-2">${currentLang === 'th' ? '- ห้องว่าง -' : '- အခန်းလွတ် -'}</div>`;
                 }
 
                 card.innerHTML = `
@@ -623,13 +657,14 @@
             residents.forEach(r => {
                 if (!checkIsResigned(r)) {
                     const genderTxt = getGenderText(r);
+                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง');
                     const photo = formatPhotoUrl(r.photo);
                     tbody.innerHTML += `
                         <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="ပုံကို နှိပ်၍ အကြီးကြည့်ရန်" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${currentLang === 'th' ? 'คลิกเพื่อดูรูปใหญ่' : 'ပုံကို နှိပ်၍ အကြီးကြည့်ရန်'}" onerror="this.src='https://via.placeholder.com/300'"></td>
                             <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
                             <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === translations[currentLang].genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
                             <td class="p-3 font-semibold text-gray-600">${r.department || 'OFFICE'}</td>
                             <td class="p-3 font-bold text-emerald-700">${r.roomNo || ''}</td>
                         </tr>
@@ -640,17 +675,19 @@
 
         function renderResignedTable() {
             const tbody = document.getElementById('resigned-table-body');
+            tbody.innerHTML = 'กองทัพ';
             tbody.innerHTML = '';
             residents.forEach(r => {
                 if (checkIsResigned(r)) {
                     const genderTxt = getGenderText(r);
+                    const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง');
                     const photo = formatPhotoUrl(r.photo);
                     tbody.innerHTML += `
                         <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="ပုံကို နှိပ်၍ အကြီးကြည့်ရန်" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${currentLang === 'th' ? 'คลิกเพื่อดูรูปใหญ่' : 'ပုံကို နှိပ်၍ အကြီးကြည့်ရန်'}" onerror="this.src='https://via.placeholder.com/300'"></td>
                             <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
                             <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${genderTxt === translations[currentLang].genderBoy ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">${genderTxt}</span></td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
                             <td class="p-3 font-semibold text-red-600">${r.department || ''}</td>
                             <td class="p-3 font-bold text-gray-500">${r.roomNo || '-'}</td>
                         </tr>
