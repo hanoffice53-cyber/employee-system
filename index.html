@@ -137,11 +137,13 @@
 
                     <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                            <!-- Left Column: Photo & Room Card Preview (Fixed heights to keep layout completely still) -->
+                            <!-- Left Column: Full-Frame Photo & Room Card Preview -->
                             <div class="flex flex-col items-center justify-start space-y-3">
-                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-64 shadow-sm relative shrink-0">
-                                    <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-40 h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm cursor-pointer hover:opacity-90 transition shrink-0" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
-                                    <span class="text-[10px] text-gray-400 font-bold">300 * 300 PHOTO</span>
+                                <div class="flex flex-col items-center justify-between border-2 border-emerald-500 rounded-xl p-2 bg-white w-full h-64 shadow-sm relative shrink-0 overflow-hidden">
+                                    <div class="w-full h-[214px] flex items-center justify-center overflow-hidden rounded-lg bg-gray-100">
+                                        <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-full h-full object-contain cursor-pointer hover:opacity-95 transition" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 font-bold pt-1">300 * 300 PHOTO</span>
                                 </div>
                                 <div id="room-card-preview" class="w-full h-[116px] border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm invisible flex flex-col">
                                     <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition shrink-0">ROOM</div>
@@ -149,12 +151,12 @@
                                 </div>
                             </div>
 
-                            <!-- Right Column: Info Fields (Fixed row heights to prevent layout shift) -->
+                            <!-- Right Column: Info Fields -->
                             <div class="md:col-span-2 space-y-3">
                                 <div class="flex border-2 border-emerald-500 rounded-lg overflow-hidden bg-white shadow-sm h-11">
                                     <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကဒ်နံပါတ် / ID</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="5" id="card-no" autocomplete="off" oninput="handleCardInput()" onkeydown="handleCardKeydown(event)" placeholder="ID ၅ လုံး ရိုက်ထည့်ပါ (ဥပမာ - 30160)" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="5" id="card-no" autocomplete="off" onclick="moveCaretToEnd()" onfocus="moveCaretToEnd()" oninput="handleCardInput()" onkeydown="handleCardKeydown(event)" placeholder="ID ၅ လုံး ရိုက်ထည့်ပါ (ဥပမာ - 30160)" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
                                     <button type="button" onclick="clearCardInput()" title="ရှင်းရန်" class="px-3 text-gray-400 hover:text-red-600 flex items-center justify-center shrink-0 transition">
                                         <i class="fa-solid fa-circle-xmark text-sm"></i>
                                     </button>
@@ -306,7 +308,7 @@
                 adHide: "ကြော်ငြာပိတ်ရန်",
                 sectionSearch: "ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်",
                 lblCard: "ကဒ်နံပါတ် / ID",
-                lblCardPlaceholder: "ကီးဘုတ်ခေါ်ရန်နှိပ်ပါ (၅ လုံးပြည့်လျှင် ပိတ်မည်)",
+                lblCardPlaceholder: "ID ၅ လုံး ရိုက်ထည့်ပါ (နောက်ဆုံးဂဏန်း ပြင်နိုင်သည်)",
                 lblName: "အမည် (မြန်မာ)",
                 lblThaiName: "အမည် (ထိုင်း)",
                 lblGender: "ကျား / မ",
@@ -345,7 +347,7 @@
                 adHide: "ปิดประกาศ",
                 sectionSearch: "ตรวจสอบข้อมูลพนักงาน",
                 lblCard: "รหัสบัตร / ID",
-                lblCardPlaceholder: "แตะเพื่อเปิดคีย์บอร์ด (ครบ 5 หลักจะซ่อนอัตโนมัติ)",
+                lblCardPlaceholder: "พิมพ์รหัส ID 5 หลัก (แก้ไขหลักสุดท้ายได้ทันที)",
                 lblName: "ชื่อ (เมียนมา)",
                 lblThaiName: "ชื่อ (ภาษาไทย)",
                 lblGender: "เพศ",
@@ -382,6 +384,15 @@
             loadData();
         });
 
+        function moveCaretToEnd() {
+            const input = document.getElementById('card-no');
+            if (!input) return;
+            requestAnimationFrame(() => {
+                const len = input.value.length;
+                input.setSelectionRange(len, len);
+            });
+        }
+
         function hideKeyboard() {
             const cardInput = document.getElementById('card-no');
             if (cardInput && document.activeElement === cardInput) {
@@ -396,17 +407,38 @@
                 cardInputEl.value = cleanValue;
             }
             searchEmployee(cleanValue);
-
-            if (cleanValue.length >= ID_COMPLETE_LENGTH) {
-                cardInputEl.blur();
-            }
+            moveCaretToEnd();
         }
 
         function handleCardKeydown(event) {
+            const cardInputEl = document.getElementById('card-no');
+            const currentVal = cardInputEl.value;
+
             if (event.key === 'Enter') {
                 event.preventDefault();
                 searchEmployee();
                 hideKeyboard();
+                return;
+            }
+
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'Home') {
+                event.preventDefault();
+                moveCaretToEnd();
+                return;
+            }
+
+            // ID ၅ လုံးပြည့်နေချိန် ကွန်ပျူတာပေါ်မှ ဂဏန်းအသစ်တစ်လုံးရိုက်လျှင် နောက်ဆုံးဂဏန်းကို အစားထိုးရန်
+            if (/^[0-9]$/.test(event.key) && currentVal.length >= ID_COMPLETE_LENGTH && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                const start = cardInputEl.selectionStart;
+                const end = cardInputEl.selectionEnd;
+                const isReplacingAll = (start === 0 && end === currentVal.length);
+                if (!isReplacingAll) {
+                    event.preventDefault();
+                    const nextValue = currentVal.slice(0, ID_COMPLETE_LENGTH - 1) + event.key;
+                    cardInputEl.value = nextValue;
+                    searchEmployee(nextValue);
+                    moveCaretToEnd();
+                }
             }
         }
 
@@ -416,6 +448,7 @@
             lastSearchedCard = '';
             clearEmployeeFields();
             cardInputEl.focus();
+            moveCaretToEnd();
         }
 
         function applyTickerVisibility() {
