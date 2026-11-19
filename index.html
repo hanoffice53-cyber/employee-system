@@ -104,7 +104,8 @@
                     <button onclick="switchTab('active')" id="nav-active" class="nav-btn bg-emerald-700 hover:bg-emerald-900 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold whitespace-nowrap">လက်ရှိစာရင်း</button>
                     <button onclick="switchTab('resigned')" id="nav-resigned" class="nav-btn bg-emerald-700 hover:bg-emerald-900 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold whitespace-nowrap">အလုပ်ထွက်</button>
                 </div>
-                <div class="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 flex-nowrap">
+                <!-- ကြော်ငြာ ပိတ်/ဖွင့် နှင့် ဘာသာစကား ခလုတ်များ (ID ထည့်လျှင် ဖျောက်ရန်) -->
+                <div id="header-action-buttons" class="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 flex-nowrap">
                     <button onclick="toggleTicker()" id="btn-toggle-ad" class="bg-emerald-950 hover:bg-emerald-900 border border-emerald-500 px-2.5 sm:px-3 py-1.5 rounded-xl text-red-400 text-[11px] sm:text-xs font-bold shadow-md flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap flex-1 sm:flex-initial">
                         <i class="fa-solid fa-bullhorn shrink-0"></i> <span id="ad-toggle-label" class="truncate">ကြော်ငြာ ပိတ်/ဖွင့်</span>
                     </button>
@@ -396,9 +397,16 @@
         });
 
         function syncHeaderAndStatsVisibility(cardNoInput) {
-            const hasId = Boolean(String(cardNoInput || '').trim());
+            const isCheckTabActive = !document.getElementById('section-check').classList.contains('hidden');
+            const hasId = isCheckTabActive && Boolean(String(cardNoInput || '').trim());
+
+            const headerActions = document.getElementById('header-action-buttons');
             const headerBox = document.getElementById('search-header-box');
             const statsBox = document.getElementById('stats-summary-box');
+
+            if (headerActions) {
+                headerActions.classList.toggle('hidden', hasId);
+            }
             if (headerBox) {
                 headerBox.classList.toggle('hidden', hasId);
             }
@@ -512,6 +520,8 @@
             });
             document.getElementById(`section-${tabId}`).classList.remove('hidden');
             document.getElementById(`nav-${tabId}`).className = "nav-btn bg-emerald-900 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold shadow-sm whitespace-nowrap";
+
+            syncHeaderAndStatsVisibility(lastSearchedCard);
 
             if (tabId === 'rooms') renderRoomGrid();
             if (tabId === 'active') renderActiveTable();
