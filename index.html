@@ -2,7 +2,7 @@
 <html lang="my" id="html-root">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title id="page-title">ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,10 +12,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
+        html, body {
             font-family: 'Padauk', 'Sarabun', sans-serif;
             background-color: #f3f4f6;
             overflow-anchor: none;
+            overscroll-behavior: none;
         }
 
         /* အောက်ခြေ စာတမ်းအရှင် (အောက်ခံအစိမ်း + စာသားအနီ) CSS */
@@ -114,18 +115,18 @@
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+        <main class="max-w-7xl mx-auto px-4 py-4 flex-grow w-full space-y-4">
             
             <!-- SECTION 1: CHECK & SEARCH -->
-            <div id="section-check" class="app-section space-y-6">
+            <div id="section-check" class="app-section space-y-4">
                 <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6 max-w-4xl mx-auto">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 mb-4 gap-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 mb-4 gap-2.5">
                         <h2 id="txt-section-search" class="text-lg font-bold text-gray-800 flex items-center gap-2">
                             <i class="fa-solid fa-address-card text-emerald-600"></i>
                             <span>ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
                         </h2>
                         <!-- နိုင်ငံအလိုက် စုစုပေါင်း စာရင်းပြသရန် -->
-                        <div class="flex flex-wrap items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold shrink-0">
+                        <div class="flex flex-wrap items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold">
                             <span class="text-emerald-700"><span id="lbl-stat-myanmar">မြန်မာ</span>: <strong id="stat-total" class="text-emerald-900 text-sm">0</strong></span>
                             <span class="text-indigo-700">BOY: <strong id="stat-boy" class="text-indigo-900 text-sm">0</strong></span>
                             <span class="text-pink-700">GIRL: <strong id="stat-girl" class="text-pink-900 text-sm">0</strong></span>
@@ -136,54 +137,54 @@
                     </div>
 
                     <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                            <!-- Left Column: Full-Frame Photo & Room Card Preview -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                            <!-- Left Column: Full-Bleed Photo & Conditional Room Card Preview -->
                             <div class="flex flex-col items-center justify-start space-y-3">
-                                <div class="flex flex-col items-center justify-between border-2 border-emerald-500 rounded-xl p-2 bg-white w-full h-64 shadow-sm relative shrink-0 overflow-hidden">
-                                    <div class="w-full h-[214px] flex items-center justify-center overflow-hidden rounded-lg bg-gray-100">
-                                        <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-full h-full object-contain cursor-pointer hover:opacity-95 transition" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
+                                <div class="flex flex-col items-center justify-between border-2 border-emerald-500 rounded-xl p-1.5 bg-white w-full h-64 shadow-sm relative overflow-hidden">
+                                    <div class="w-full h-[222px] overflow-hidden rounded-lg bg-gray-100">
+                                        <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-full h-full object-cover object-top cursor-pointer hover:opacity-95 transition" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
                                     </div>
-                                    <span class="text-[10px] text-gray-400 font-bold pt-1">300 * 300 PHOTO</span>
+                                    <span class="text-[10px] text-gray-400 font-bold pt-0.5">300 * 300 PHOTO</span>
                                 </div>
-                                <div id="room-card-preview" class="w-full h-[116px] border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm invisible flex flex-col">
-                                    <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition shrink-0">ROOM</div>
-                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] overflow-y-auto flex-grow"></div>
+                                <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm hidden flex-col">
+                                    <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition">ROOM</div>
+                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] max-h-32 overflow-y-auto"></div>
                                 </div>
                             </div>
 
                             <!-- Right Column: Info Fields -->
-                            <div class="md:col-span-2 space-y-3">
+                            <div class="md:col-span-2 space-y-2.5">
                                 <div class="flex border-2 border-emerald-500 rounded-lg overflow-hidden bg-white shadow-sm h-11">
-                                    <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကဒ်နံပါတ် / ID</div>
+                                    <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[120px]">ကဒ်နံပါတ် / ID</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="5" id="card-no" autocomplete="off" onclick="moveCaretToEnd()" onfocus="moveCaretToEnd()" oninput="handleCardInput()" onkeydown="handleCardKeydown(event)" placeholder="ID ၅ လုံး ရိုက်ထည့်ပါ (ဥပမာ - 30160)" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                    <input type="tel" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" maxlength="5" id="card-no" autocomplete="off" onclick="moveCaretToEnd()" onfocus="moveCaretToEnd()" oninput="handleCardInput()" onkeydown="handleCardKeydown(event)" placeholder="ID ၅ လုံး ရိုက်ထည့်ပါ (ဥပမာ - 30160)" class="w-full px-2 h-full text-base focus:outline-none font-mono font-bold text-gray-800">
                                     <button type="button" onclick="clearCardInput()" title="ရှင်းရန်" class="px-3 text-gray-400 hover:text-red-600 flex items-center justify-center shrink-0 transition">
                                         <i class="fa-solid fa-circle-xmark text-sm"></i>
                                     </button>
                                 </div>
 
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
-                                    <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">အမည် (မြန်မာ)</div>
+                                    <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[120px]">အမည် (မြန်မာ)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
                                     <input type="text" id="person-name" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800 truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
-                                    <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">အမည် (ထိုင်း)</div>
+                                    <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[120px]">အမည် (ထိုင်း)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
                                     <input type="text" id="thai-name" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-blue-900 truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
-                                    <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကျား / မ</div>
+                                    <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[120px]">ကျား / မ</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
                                     <input type="text" id="gender" class="w-full px-2 h-full text-sm focus:outline-none bg-white font-semibold truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
-                                    <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ဌာန</div>
+                                    <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[120px]">ဌာန</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
                                     <input type="text" id="department" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800 truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
-                                    <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ROOM (အခန်း)</div>
+                                    <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[120px]">ROOM (အခန်း)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
                                     <input type="text" id="room-no" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-emerald-700 truncate" readonly>
                                 </div>
@@ -387,16 +388,21 @@
         function moveCaretToEnd() {
             const input = document.getElementById('card-no');
             if (!input) return;
-            requestAnimationFrame(() => {
-                const len = input.value.length;
+            const len = input.value.length;
+            try {
                 input.setSelectionRange(len, len);
-            });
+            } catch (e) {}
         }
 
         function hideKeyboard() {
             const cardInput = document.getElementById('card-no');
-            if (cardInput && document.activeElement === cardInput) {
+            if (cardInput) {
                 cardInput.blur();
+                setTimeout(() => {
+                    if (document.activeElement === cardInput) {
+                        cardInput.blur();
+                    }
+                }, 0);
             }
         }
 
@@ -407,7 +413,12 @@
                 cardInputEl.value = cleanValue;
             }
             searchEmployee(cleanValue);
-            moveCaretToEnd();
+
+            if (cleanValue.length >= ID_COMPLETE_LENGTH) {
+                hideKeyboard();
+            } else {
+                moveCaretToEnd();
+            }
         }
 
         function handleCardKeydown(event) {
@@ -669,7 +680,7 @@
                     const natBadge = nat === 'Myanmar' ? '' : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${nat === 'Cambodia' ? 'bg-amber-100 text-amber-800' : 'bg-purple-100 text-purple-800'}">${natText}</span>`;
                     return `
                         <div class="flex items-center gap-4 p-3 hover:bg-emerald-50 rounded-xl transition">
-                            <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'">
+                            <img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-20 h-20 rounded-full object-cover object-top border-4 border-emerald-500 shadow-md shrink-0 cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'">
                             <div class="flex-grow">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
@@ -710,7 +721,9 @@
             document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
             document.getElementById('preview-room-title').innerText = 'ROOM';
             document.getElementById('preview-room-members').innerHTML = '';
-            document.getElementById('room-card-preview').classList.add('invisible');
+            const previewCard = document.getElementById('room-card-preview');
+            previewCard.classList.add('hidden');
+            previewCard.classList.remove('flex');
             activeModalRoomNo = '';
         }
 
@@ -739,7 +752,8 @@
 
                 if (found.roomNo) {
                     activeModalRoomNo = found.roomNo;
-                    previewCard.classList.remove('invisible');
+                    previewCard.classList.remove('hidden');
+                    previewCard.classList.add('flex');
                     document.getElementById('preview-room-title').innerText = found.roomNo;
                     const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === found.roomNo.trim().toLowerCase());
                     document.getElementById('preview-room-members').innerHTML = members.map(m => {
@@ -756,7 +770,8 @@
                 } else { 
                     document.getElementById('preview-room-title').innerText = 'ROOM';
                     document.getElementById('preview-room-members').innerHTML = '';
-                    previewCard.classList.add('invisible');
+                    previewCard.classList.add('hidden');
+                    previewCard.classList.remove('flex');
                     activeModalRoomNo = '';
                 }
             } else {
@@ -892,7 +907,7 @@
                 const photo = formatPhotoUrl(r.photo);
                 tbody.innerHTML += `
                     <tr>
-                        <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
+                        <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover object-top border shadow-sm cursor-pointer hover:scale-105 transition" title="${translations[currentLang].zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
                         <td class="p-3 font-mono font-bold">${r.cardNo || ''}</td>
                         <td class="p-3 font-semibold">${r.name || ''} <br><span class="text-xs text-blue-800">${r.thaiName || ''}</span></td>
                         <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
@@ -920,7 +935,7 @@
 
                     tbody.innerHTML += `
                         <tr>
-                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover border shadow-sm cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
+                            <td class="p-3"><img src="${photo}" onclick="zoomPhoto('${photo}')" class="w-12 h-12 rounded-full object-cover object-top border shadow-sm cursor-pointer hover:scale-105 transition" title="${t.zoomInstruction}" onerror="this.src='https://via.placeholder.com/300'"></td>
                             <td class="p-3 font-mono font-bold text-red-600">${r.cardNo || ''}</td>
                             <td class="p-3 font-semibold text-gray-700">${r.name || ''} <br><span class="text-xs text-red-600">${r.thaiName || ''}</span></td>
                             <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${isGirl ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">${genderTxt}</span></td>
