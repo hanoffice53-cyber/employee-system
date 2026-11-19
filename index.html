@@ -154,7 +154,7 @@
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
                                     <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကဒ်နံပါတ် / ID</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="tel" id="card-no" autocomplete="off" oninput="searchEmployee()" placeholder="နှိပ်၍ရိုက်ပါ သို့မဟုတ် အသံဖြင့်ပြောပါ" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                    <input type="tel" id="card-no" autocomplete="off" oninput="searchEmployee()" placeholder="နှိပ်၍ရိုက်ပါ သို့မဟုတ် မိုက်ခရိုဖုန်းနှိပ်ပြောပါ" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
                                     <button type="button" onclick="startVoiceInput()" id="btn-voice-id" title="အသံဖြင့် ID ထည့်ရန်" class="px-3 bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shrink-0 transition">
                                         <i id="voice-icon" class="fa-solid fa-microphone text-sm"></i>
                                     </button>
@@ -390,6 +390,21 @@
             loadData();
         });
 
+        // Page/Modal ပြင်ပ နေရာလွတ်များကို နှိပ်လျှင် ကီးဘုတ်ပြန်ဝင်စေရန်
+        document.addEventListener('click', (e) => {
+            const clickedInsideCardOrVoice = e.target.closest('#card-no, #btn-voice-id');
+            if (!clickedInsideCardOrVoice) {
+                hideKeyboard();
+            }
+        });
+
+        function hideKeyboard() {
+            const cardInput = document.getElementById('card-no');
+            if (cardInput && document.activeElement === cardInput) {
+                cardInput.blur();
+            }
+        }
+
         function applyTickerVisibility() {
             const bar = document.getElementById('bottom-announcement-bar');
             const t = translations[currentLang];
@@ -427,6 +442,8 @@
             const t = translations[currentLang];
             const statusEl = document.getElementById('voice-status');
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            hideKeyboard();
 
             if (!SpeechRecognition) {
                 statusEl.textContent = t.voiceNotSupported;
@@ -466,7 +483,17 @@
             };
 
             recognition.onerror = (event) => {
-                statusEl.textContent = `🎤 (${event.error})`;
+                if (event.error === 'service-not-allowed') {
+                    statusEl.textContent = currentLang === 'th'
+                        ? "SERVICE NOT ALLOWED: กรุณาเปิดผ่าน HTTPS และอนุญาตไมโครโฟน หรือใช้ปุ่มไมค์บนคีย์บอร์ด"
+                        : "SERVICE NOT ALLOWED: HTTPS လင့်ခ်ဖြင့် ဖွင့်ပါ၊ Microphone ခွင့်ပြုပါ (သို့) Keyboard မှ Mic ကို သုံးပါ။";
+                } else if (event.error === 'not-allowed') {
+                    statusEl.textContent = currentLang === 'th'
+                        ? "กรุณาอนุญาตการเข้าถึงไมโครโฟนในเบราว์เซอร์"
+                        : "Browser တွင် Microphone ခွင့်ပြုချက် (Allow) ပေးပါ။";
+                } else {
+                    statusEl.textContent = `🎤 (${event.error})`;
+                }
             };
 
             recognition.onend = () => {
@@ -476,10 +503,15 @@
                 voiceIcon.className = 'fa-solid fa-microphone text-sm';
             };
 
-            recognition.start();
+            try {
+                recognition.start();
+            } catch (err) {
+                statusEl.textContent = `🎤 (${err.message})`;
+            }
         }
 
         function switchTab(tabId) {
+            hideKeyboard();
             document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(b => {
                 b.className = "nav-btn bg-emerald-700 hover:bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold";
@@ -637,15 +669,18 @@
 
         function zoomPhoto(url) {
             if(!url || url.includes('placeholder')) return;
+            hideKeyboard();
             document.getElementById('zoomed-photo').src = url;
             document.getElementById('photo-zoom-modal').classList.remove('hidden');
         }
 
         function closePhotoZoom() {
             document.getElementById('photo-zoom-modal').classList.add('hidden');
+            hideKeyboard();
         }
 
         function openRoomModal(roomNo) {
+            hideKeyboard();
             activeModalRoomNo = roomNo;
             const modal = document.getElementById('room-detail-modal');
             const titleEl = document.getElementById('modal-room-title');
@@ -696,6 +731,7 @@
 
         function closeRoomModal() {
             document.getElementById('room-detail-modal').classList.add('hidden');
+            hideKeyboard();
         }
 
         function openRoomModalFromPreview() {
