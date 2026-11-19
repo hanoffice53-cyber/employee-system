@@ -137,54 +137,53 @@
 
                     <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                            <!-- Left Column: Photo & Room Card Preview (Fixed heights to prevent layout shift) -->
+                            <!-- Left Column: Photo & Room Card Preview (Fixed heights to keep layout completely still) -->
                             <div class="flex flex-col items-center justify-start space-y-3">
                                 <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-64 shadow-sm relative shrink-0">
                                     <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-40 h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm cursor-pointer hover:opacity-90 transition shrink-0" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
                                     <span class="text-[10px] text-gray-400 font-bold">300 * 300 PHOTO</span>
                                 </div>
-                                <div id="room-card-preview" class="w-full min-h-[110px] border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm invisible transition-none">
-                                    <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition">ROOM</div>
-                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] min-h-[78px]"></div>
+                                <div id="room-card-preview" class="w-full h-[116px] border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm invisible flex flex-col">
+                                    <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition shrink-0">ROOM</div>
+                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] overflow-y-auto flex-grow"></div>
                                 </div>
                             </div>
 
-                            <!-- Right Column: Info Fields -->
+                            <!-- Right Column: Info Fields (Fixed row heights to prevent layout shift) -->
                             <div class="md:col-span-2 space-y-3">
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                <div class="flex border-2 border-emerald-500 rounded-lg overflow-hidden bg-white shadow-sm h-11">
                                     <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကဒ်နံပါတ် / ID</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="tel" id="card-no" autocomplete="off" oninput="searchEmployee()" placeholder="နှိပ်၍ရိုက်ပါ သို့မဟုတ် မိုက်ခရိုဖုန်းနှိပ်ပြောပါ" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
-                                    <button type="button" onclick="startVoiceInput()" id="btn-voice-id" title="အသံဖြင့် ID ထည့်ရန်" class="px-3 bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shrink-0 transition">
-                                        <i id="voice-icon" class="fa-solid fa-microphone text-sm"></i>
+                                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="5" id="card-no" autocomplete="off" oninput="handleCardInput()" onkeydown="handleCardKeydown(event)" placeholder="ID ၅ လုံး ရိုက်ထည့်ပါ (ဥပမာ - 30160)" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                    <button type="button" onclick="clearCardInput()" title="ရှင်းရန်" class="px-3 text-gray-400 hover:text-red-600 flex items-center justify-center shrink-0 transition">
+                                        <i class="fa-solid fa-circle-xmark text-sm"></i>
                                     </button>
                                 </div>
-                                <div id="voice-status" class="text-[11px] text-emerald-700 font-semibold min-h-[16px] px-1"></div>
 
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
                                     <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">အမည် (မြန်မာ)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="person-name" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800" readonly>
+                                    <input type="text" id="person-name" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800 truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
                                     <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">အမည် (ထိုင်း)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="thai-name" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-blue-900" readonly>
+                                    <input type="text" id="thai-name" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-blue-900 truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
                                     <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကျား / မ</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="gender" class="w-full px-2 h-full text-sm focus:outline-none bg-white font-semibold" readonly>
+                                    <input type="text" id="gender" class="w-full px-2 h-full text-sm focus:outline-none bg-white font-semibold truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
                                     <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ဌာန</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="department" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800" readonly>
+                                    <input type="text" id="department" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800 truncate" readonly>
                                 </div>
                                 <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
                                     <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ROOM (အခန်း)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="room-no" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-emerald-700" readonly>
+                                    <input type="text" id="room-no" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-emerald-700 truncate" readonly>
                                 </div>
                             </div>
                         </div>
@@ -272,7 +271,7 @@
         </main>
     </div>
 
-    <!-- BOTTOM GREEN SCROLLING ANNOUNCEMENT TICKER WITH RED TEXT & CLOSE BUTTON -->
+    <!-- BOTTOM GREEN SCROLLING ANNOUNCEMENT TICKER WITH RED TEXT -->
     <div id="bottom-announcement-bar" class="bottom-ticker" role="region" aria-label="ကြော်ငြာစာတမ်း">
         <div id="bottom-marquee-text" class="ticker-track">
             📢 ကြော်ငြာ - ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်မှ ကြိုဆိုပါသည်။
@@ -285,7 +284,8 @@
     <!-- JAVASCRIPT -->
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMmfqViIkGUO7ek48hnecALud94FVS_FWuYGDti4XHYcHQO9rPd9resdAqTerRrm1f/exec";
-        
+        const ID_COMPLETE_LENGTH = 5;
+
         let residents = [];
         let sheetAnnouncements = { my: "", th: "" };
         let currentRoomTab = 'A';
@@ -294,8 +294,6 @@
         let isTickerVisible = localStorage.getItem('ticker_visible') !== 'false';
         let activeModalRoomNo = '';
         let lastSearchedCard = '';
-        let recognition = null;
-        let isListening = false;
 
         const translations = {
             my: {
@@ -308,7 +306,7 @@
                 adHide: "ကြော်ငြာပိတ်ရန်",
                 sectionSearch: "ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်",
                 lblCard: "ကဒ်နံပါတ် / ID",
-                lblCardPlaceholder: "နှိပ်၍ရိုက်ပါ သို့မဟုတ် မိုက်ခရိုဖုန်းနှိပ်ပြောပါ",
+                lblCardPlaceholder: "ကီးဘုတ်ခေါ်ရန်နှိပ်ပါ (၅ လုံးပြည့်လျှင် ပိတ်မည်)",
                 lblName: "အမည် (မြန်မာ)",
                 lblThaiName: "အမည် (ထိုင်း)",
                 lblGender: "ကျား / မ",
@@ -335,10 +333,7 @@
                 natMyanmar: "မြန်မာ",
                 natCambodia: "ကမ္ဘောဒီးယား",
                 natLaos: "လာအို",
-                announcement: "📢 ကြော်ငြာ - ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်မှ ကြိုဆိုပါသည်။",
-                voiceListening: "🎤 နားထောင်နေပါသည်... ID နံပါတ်ပြောပါ",
-                voiceNotSupported: "ဤ Browser တွင် အသံဖြင့်ထည့်သွင်းမှု မရရှိနိုင်ပါ။",
-                voiceNoDigit: "ID ဂဏန်းများ ပြတ်သားစွာ ကြားမိပါ။ ထပ်ပြောကြည့်ပါ။"
+                announcement: "📢 ကြော်ငြာ - ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်မှ ကြိုဆိုပါသည်။"
             },
             th: {
                 pageTitle: "ระบบจัดการข้อมูลพนักงานและห้องพัก",
@@ -350,7 +345,7 @@
                 adHide: "ปิดประกาศ",
                 sectionSearch: "ตรวจสอบข้อมูลพนักงาน",
                 lblCard: "รหัสบัตร / ID",
-                lblCardPlaceholder: "แตะเพื่อพิมพ์ หรือกดไมค์พูดรหัส ID",
+                lblCardPlaceholder: "แตะเพื่อเปิดคีย์บอร์ด (ครบ 5 หลักจะซ่อนอัตโนมัติ)",
                 lblName: "ชื่อ (เมียนมา)",
                 lblThaiName: "ชื่อ (ภาษาไทย)",
                 lblGender: "เพศ",
@@ -377,10 +372,7 @@
                 natMyanmar: "เมียนมา",
                 natCambodia: "กัมพูชา",
                 natLaos: "ลาว",
-                announcement: "📢 ประกาศ - ยินดีต้อนรับสู่ระบบจัดการข้อมูลพนักงานและห้องพัก",
-                voiceListening: "🎤 กำลังฟังเสียง... พูดหมายเลข ID ได้เลย",
-                voiceNotSupported: "เบราว์เซอร์นี้ไม่รองรับการพิมพ์ด้วยเสียง",
-                voiceNoDigit: "ไม่พบตัวเลข ID กรุณาลองพูดใหม่อีกครั้ง"
+                announcement: "📢 ประกาศ - ยินดีต้อนรับสู่ระบบจัดการข้อมูลพนักงานและห้องพัก"
             }
         };
 
@@ -390,19 +382,40 @@
             loadData();
         });
 
-        // Page/Modal ပြင်ပ နေရာလွတ်များကို နှိပ်လျှင် ကီးဘုတ်ပြန်ဝင်စေရန်
-        document.addEventListener('click', (e) => {
-            const clickedInsideCardOrVoice = e.target.closest('#card-no, #btn-voice-id');
-            if (!clickedInsideCardOrVoice) {
-                hideKeyboard();
-            }
-        });
-
         function hideKeyboard() {
             const cardInput = document.getElementById('card-no');
             if (cardInput && document.activeElement === cardInput) {
                 cardInput.blur();
             }
+        }
+
+        function handleCardInput() {
+            const cardInputEl = document.getElementById('card-no');
+            const cleanValue = cardInputEl.value.replace(/[^0-9]/g, '').slice(0, ID_COMPLETE_LENGTH);
+            if (cardInputEl.value !== cleanValue) {
+                cardInputEl.value = cleanValue;
+            }
+            searchEmployee(cleanValue);
+
+            if (cleanValue.length >= ID_COMPLETE_LENGTH) {
+                cardInputEl.blur();
+            }
+        }
+
+        function handleCardKeydown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                searchEmployee();
+                hideKeyboard();
+            }
+        }
+
+        function clearCardInput() {
+            const cardInputEl = document.getElementById('card-no');
+            cardInputEl.value = '';
+            lastSearchedCard = '';
+            clearEmployeeFields();
+            cardInputEl.focus();
         }
 
         function applyTickerVisibility() {
@@ -423,91 +436,6 @@
             isTickerVisible = !isTickerVisible;
             localStorage.setItem('ticker_visible', String(isTickerVisible));
             applyTickerVisibility();
-        }
-
-        function normalizeVoiceDigits(spokenText) {
-            const myDigits = { '၀': '0', '၁': '1', '၂': '2', '၃': '3', '၄': '4', '၅': '5', '၆': '6', '၇': '7', '၈': '8', '၉': '9' };
-            const thDigits = { '๐': '0', '๑': '1', '๒': '2', '๓': '3', '๔': '4', '๕': '5', '๖': '6', '๗': '7', '๘': '8', '๙': '9' };
-            let converted = String(spokenText || '');
-            for (const [k, v] of Object.entries(myDigits)) {
-                converted = converted.split(k).join(v);
-            }
-            for (const [k, v] of Object.entries(thDigits)) {
-                converted = converted.split(k).join(v);
-            }
-            return converted.replace(/[^0-9]/g, '').trim();
-        }
-
-        function startVoiceInput() {
-            const t = translations[currentLang];
-            const statusEl = document.getElementById('voice-status');
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            hideKeyboard();
-
-            if (!SpeechRecognition) {
-                statusEl.textContent = t.voiceNotSupported;
-                return;
-            }
-
-            if (isListening && recognition) {
-                recognition.stop();
-                return;
-            }
-
-            recognition = new SpeechRecognition();
-            recognition.lang = currentLang === 'th' ? 'th-TH' : 'my-MM';
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
-            const voiceBtn = document.getElementById('btn-voice-id');
-            const voiceIcon = document.getElementById('voice-icon');
-
-            recognition.onstart = () => {
-                isListening = true;
-                voiceBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
-                voiceBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-                voiceIcon.className = 'fa-solid fa-stop text-sm';
-                statusEl.textContent = t.voiceListening;
-            };
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                const digitsOnly = normalizeVoiceDigits(transcript);
-                if (digitsOnly) {
-                    statusEl.textContent = `🎤 "${transcript}" → ID: ${digitsOnly}`;
-                    searchEmployee(digitsOnly);
-                } else {
-                    statusEl.textContent = `${t.voiceNoDigit} ("${transcript}")`;
-                }
-            };
-
-            recognition.onerror = (event) => {
-                if (event.error === 'service-not-allowed') {
-                    statusEl.textContent = currentLang === 'th'
-                        ? "SERVICE NOT ALLOWED: กรุณาเปิดผ่าน HTTPS และอนุญาตไมโครโฟน หรือใช้ปุ่มไมค์บนคีย์บอร์ด"
-                        : "SERVICE NOT ALLOWED: HTTPS လင့်ခ်ဖြင့် ဖွင့်ပါ၊ Microphone ခွင့်ပြုပါ (သို့) Keyboard မှ Mic ကို သုံးပါ။";
-                } else if (event.error === 'not-allowed') {
-                    statusEl.textContent = currentLang === 'th'
-                        ? "กรุณาอนุญาตการเข้าถึงไมโครโฟนในเบราว์เซอร์"
-                        : "Browser တွင် Microphone ခွင့်ပြုချက် (Allow) ပေးပါ။";
-                } else {
-                    statusEl.textContent = `🎤 (${event.error})`;
-                }
-            };
-
-            recognition.onend = () => {
-                isListening = false;
-                voiceBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
-                voiceBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
-                voiceIcon.className = 'fa-solid fa-microphone text-sm';
-            };
-
-            try {
-                recognition.start();
-            } catch (err) {
-                statusEl.textContent = `🎤 (${err.message})`;
-            }
         }
 
         function switchTab(tabId) {
