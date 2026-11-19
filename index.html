@@ -15,32 +15,34 @@
         body {
             font-family: 'Padauk', 'Sarabun', sans-serif;
             background-color: #f3f4f6;
+            overflow-anchor: none;
         }
 
-        /* အောက်ခြေ စာတမ်းအရှင် (Scrolling Marquee) CSS */
+        /* အောက်ခြေ စာတမ်းအရှင် (အနီရောင် Scrolling Marquee) CSS */
         .bottom-ticker {
             position: fixed;
             left: 0;
             bottom: 0;
             width: 100%;
-            height: 40px;
-            background-color: #064e3b;
-            color: #fef08a;
-            border-top: 2px solid #10b981;
+            height: 42px;
+            background-color: #991b1b;
+            color: #ffffff;
+            border-top: 2px solid #ef4444;
             overflow: hidden;
             display: flex;
             align-items: center;
             z-index: 45;
-            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 -4px 12px rgba(153, 27, 27, 0.25);
         }
 
         .ticker-track {
             display: inline-block;
             white-space: nowrap;
             padding-left: 100%;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             font-weight: 700;
             animation: ticker-scroll 22s linear infinite;
+            will-change: transform;
         }
 
         .bottom-ticker:hover .ticker-track {
@@ -57,7 +59,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen text-gray-800 flex flex-col pb-12">
+<body class="min-h-screen text-gray-800 flex flex-col pb-14">
 
     <!-- ROOM DETAILS POPUP MODAL -->
     <div id="room-detail-modal" class="fixed inset-0 bg-slate-900 bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
@@ -120,7 +122,7 @@
                             <span>ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်</span>
                         </h2>
                         <!-- နိုင်ငံအလိုက် စုစုပေါင်း စာရင်းပြသရန် -->
-                        <div class="flex flex-wrap items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold">
+                        <div class="flex flex-wrap items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-xs font-bold shrink-0">
                             <span class="text-emerald-700"><span id="lbl-stat-myanmar">မြန်မာ</span>: <strong id="stat-total" class="text-emerald-900 text-sm">0</strong></span>
                             <span class="text-indigo-700">BOY: <strong id="stat-boy" class="text-indigo-900 text-sm">0</strong></span>
                             <span class="text-pink-700">GIRL: <strong id="stat-girl" class="text-pink-900 text-sm">0</strong></span>
@@ -132,49 +134,49 @@
 
                     <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                            <!-- Left Column: Photo & Room Card Preview -->
+                            <!-- Left Column: Photo & Room Card Preview (Fixed heights to prevent layout shift) -->
                             <div class="flex flex-col items-center justify-start space-y-3">
-                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-60 sm:h-64 shadow-sm relative shrink-0">
-                                    <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-36 h-36 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm cursor-pointer hover:opacity-90 transition" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
+                                <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-3 bg-white w-full h-64 shadow-sm relative shrink-0">
+                                    <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-40 h-40 rounded-full object-cover border-2 border-emerald-500 mb-2 shadow-sm cursor-pointer hover:opacity-90 transition shrink-0" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
                                     <span class="text-[10px] text-gray-400 font-bold">300 * 300 PHOTO</span>
                                 </div>
-                                <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm opacity-0 transition-opacity duration-200">
+                                <div id="room-card-preview" class="w-full min-h-[110px] border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm invisible transition-none">
                                     <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition">ROOM</div>
-                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] min-h-[35px]"></div>
+                                    <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] min-h-[78px]"></div>
                                 </div>
                             </div>
 
                             <!-- Right Column: Info Fields -->
                             <div class="md:col-span-2 space-y-3">
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                    <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ကဒ်နံပါတ် / ID</div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                    <div id="lbl-card" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကဒ်နံပါတ် / ID</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="tel" id="card-no" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-2 py-1.5 text-sm focus:outline-none font-mono font-bold text-gray-800">
+                                    <input type="tel" id="card-no" autofocus autocomplete="off" oninput="searchEmployee()" placeholder="ဥပမာ - 30160" class="w-full px-2 h-full text-sm focus:outline-none font-mono font-bold text-gray-800">
                                 </div>
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                    <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">အမည် (မြန်မာ)</div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                    <div id="lbl-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">အမည် (မြန်မာ)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="person-name" class="w-full px-2 py-1.5 text-sm focus:outline-none font-semibold text-gray-800" readonly>
+                                    <input type="text" id="person-name" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800" readonly>
                                 </div>
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                    <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">အမည် (ထိုင်း)</div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                    <div id="lbl-thai-name" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">အမည် (ထိုင်း)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="thai-name" class="w-full px-2 py-1.5 text-sm focus:outline-none font-bold text-blue-900" readonly>
+                                    <input type="text" id="thai-name" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-blue-900" readonly>
                                 </div>
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                    <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ကျား / မ</div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                    <div id="lbl-gender" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ကျား / မ</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="gender" class="w-full px-2 py-1.5 text-sm focus:outline-none bg-white font-semibold" readonly>
+                                    <input type="text" id="gender" class="w-full px-2 h-full text-sm focus:outline-none bg-white font-semibold" readonly>
                                 </div>
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                    <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ဌာန</div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                    <div id="lbl-dept" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ဌာန</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="department" class="w-full px-2 py-1.5 text-sm focus:outline-none font-semibold text-gray-800" readonly>
+                                    <input type="text" id="department" class="w-full px-2 h-full text-sm focus:outline-none font-semibold text-gray-800" readonly>
                                 </div>
-                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-                                    <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 py-2 border-r border-gray-300 flex items-center shrink-0 min-w-[120px]">ROOM (အခန်း)</div>
+                                <div class="flex border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10">
+                                    <div id="lbl-room" class="bg-cyan-100 text-cyan-900 text-xs font-bold px-3 flex items-center shrink-0 min-w-[125px]">ROOM (အခန်း)</div>
                                     <div class="flex items-center px-2 text-gray-400 font-bold text-xs">-</div>
-                                    <input type="text" id="room-no" class="w-full px-2 py-1.5 text-sm focus:outline-none font-bold text-emerald-700" readonly>
+                                    <input type="text" id="room-no" class="w-full px-2 h-full text-sm focus:outline-none font-bold text-emerald-700" readonly>
                                 </div>
                             </div>
                         </div>
@@ -262,7 +264,7 @@
         </main>
     </div>
 
-    <!-- BOTTOM SCROLLING ANNOUNCEMENT TICKER -->
+    <!-- BOTTOM RED SCROLLING ANNOUNCEMENT TICKER -->
     <div class="bottom-ticker" role="region" aria-label="ကြော်ငြာစာတမ်း">
         <div id="bottom-marquee-text" class="ticker-track">
             📢 ကြော်ငြာ - ဝန်ထမ်းနှင့် အခန်း စီမံခန့်ခွဲမှု စနစ်မှ ကြိုဆိုပါသည်။
@@ -271,7 +273,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJf1MSSnjiTiOEWRdKTEQRM0Au_UUrmBIEZ3sQWwal_dG8YSBICXtEWJCj_Q5KJf0Q/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJKIyGgPyNTYC-RnmCTe5QBgdlbDkGUTPxScI922L9Y5EPv2xt-j63Z_L7xeKTaeyo/exec";
         
         let residents = [];
         let sheetAnnouncements = { my: "", th: "" };
@@ -290,7 +292,7 @@
                 navResigned: "အလုပ်ထွက်",
                 sectionSearch: "ဝန်ထမ်း အချက်အလက် ကြည့်ရှုရန်",
                 lblCard: "ကဒ်နံပါတ် / ID",
-                lblCardPlaceholder: "ဥပမာ - 30160",
+                lblCardPlaceholder: "ID တိုက်ရိုက်ရိုက်ထည့်ပါ (ဥပမာ - 30160)",
                 lblName: "အမည် (မြန်မာ)",
                 lblThaiName: "အမည် (ထိုင်း)",
                 lblGender: "ကျား / မ",
@@ -327,7 +329,7 @@
                 navResigned: "ลาออก",
                 sectionSearch: "ตรวจสอบข้อมูลพนักงาน",
                 lblCard: "รหัสบัตร / ID",
-                lblCardPlaceholder: "เช่น - 30160",
+                lblCardPlaceholder: "พิมพ์รหัส ID ได้ทันที (เช่น - 30160)",
                 lblName: "ชื่อ (เมียนมา)",
                 lblThaiName: "ชื่อ (ภาษาไทย)",
                 lblGender: "เพศ",
@@ -358,9 +360,30 @@
             }
         };
 
+        function focusCardInput() {
+            const input = document.getElementById('card-no');
+            if (input && !document.getElementById('section-check').classList.contains('hidden')) {
+                requestAnimationFrame(() => input.focus({ preventScroll: true }));
+            }
+        }
+
+        // Page ဖွင့်သည်နှင့် ID အကွက်သို့ တိုက်ရိုက် Focus ချိတ်ဆက်ခြင်း
         window.addEventListener('DOMContentLoaded', () => {
             updateUIStrings();
+            focusCardInput();
             loadData();
+        });
+
+        // မျက်နှာပြင်ပေါ်ရှိ လွတ်နေသောနေရာကို နှိပ်လိုက်လျှင်လည်း ID အကွက်သို့ တိုက်ရိုက်ရိုက်ထည့်နိုင်ရန်
+        document.addEventListener('click', (e) => {
+            if (document.getElementById('section-check').classList.contains('hidden')) return;
+            if (!document.getElementById('room-detail-modal').classList.contains('hidden')) return;
+            if (!document.getElementById('photo-zoom-modal').classList.contains('hidden')) return;
+
+            const clickedInteractive = e.target.closest('button, a, input, select, textarea, img, #room-card-preview');
+            if (!clickedInteractive) {
+                focusCardInput();
+            }
         });
 
         function switchTab(tabId) {
@@ -371,6 +394,7 @@
             document.getElementById(`section-${tabId}`).classList.remove('hidden');
             document.getElementById(`nav-${tabId}`).className = "nav-btn bg-emerald-900 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm";
 
+            if (tabId === 'check') focusCardInput();
             if (tabId === 'rooms') renderRoomGrid();
             if (tabId === 'active') renderActiveTable();
             if (tabId === 'resigned') renderResignedTable();
@@ -484,6 +508,9 @@
 
                 updateUIStrings();
                 updateStats();
+                if (lastSearchedCard) {
+                    searchEmployee(lastSearchedCard);
+                }
             } catch (e) { console.error(e); }
         }
 
@@ -522,6 +549,7 @@
 
         function closePhotoZoom() {
             document.getElementById('photo-zoom-modal').classList.add('hidden');
+            focusCardInput();
         }
 
         function openRoomModal(roomNo) {
@@ -575,6 +603,7 @@
 
         function closeRoomModal() {
             document.getElementById('room-detail-modal').classList.add('hidden');
+            focusCardInput();
         }
 
         function openRoomModalFromPreview() {
@@ -583,25 +612,30 @@
             }
         }
 
+        function clearEmployeeFields() {
+            document.getElementById('person-name').value = '';
+            document.getElementById('thai-name').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('department').value = '';
+            document.getElementById('room-no').value = '';
+            document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
+            document.getElementById('preview-room-title').innerText = 'ROOM';
+            document.getElementById('preview-room-members').innerHTML = '';
+            document.getElementById('room-card-preview').classList.add('invisible');
+            activeModalRoomNo = '';
+        }
+
         function searchEmployee(targetCard = null) {
             const cardInputEl = document.getElementById('card-no');
-            const cardNoInput = targetCard !== null ? targetCard : cardInputEl.value.trim();
-            if(targetCard !== null && cardInputEl.value !== targetCard) {
-                cardInputEl.value = targetCard;
+            const cardNoInput = targetCard !== null ? String(targetCard).trim() : cardInputEl.value.trim();
+            if(targetCard !== null && cardInputEl.value !== cardNoInput) {
+                cardInputEl.value = cardNoInput;
             }
             lastSearchedCard = cardNoInput;
             const previewCard = document.getElementById('room-card-preview');
 
             if (!cardNoInput) {
-                previewCard.classList.remove('opacity-100');
-                previewCard.classList.add('opacity-0');
-                document.getElementById('person-name').value = '';
-                document.getElementById('thai-name').value = '';
-                document.getElementById('gender').value = '';
-                document.getElementById('department').value = '';
-                document.getElementById('room-no').value = '';
-                document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
-                activeModalRoomNo = '';
+                clearEmployeeFields();
                 return;
             }
 
@@ -616,8 +650,7 @@
 
                 if (found.roomNo) {
                     activeModalRoomNo = found.roomNo;
-                    previewCard.classList.remove('opacity-0');
-                    previewCard.classList.add('opacity-100');
+                    previewCard.classList.remove('invisible');
                     document.getElementById('preview-room-title').innerText = found.roomNo;
                     const members = residents.filter(r => !checkIsResigned(r) && String(r.roomNo || '').trim().toLowerCase() === found.roomNo.trim().toLowerCase());
                     document.getElementById('preview-room-members').innerHTML = members.map(m => {
@@ -625,29 +658,20 @@
                         const isGirl = gText.includes('မ') || gText.includes('หญิง') || gText.includes('ស្រី') || gText.includes('ຍິງ');
                         const gTag = isGirl ? 'ญ' : 'ช';
                         return `
-                            <div onclick="openRoomModal('${found.roomNo}')" class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-100 cursor-pointer transition ${String(m.cardNo).trim() === cardNoInput ? 'bg-emerald-50 font-bold' : ''}">
+                            <div onclick="openRoomModal('${found.roomNo}')" class="px-2 py-1 flex justify-between items-center text-[11px] hover:bg-emerald-100 cursor-pointer ${String(m.cardNo).trim() === cardNoInput ? 'bg-emerald-50 font-bold' : ''}">
                                 <span>${m.cardNo || ''} ${m.name || ''}</span>
                                 <span class="font-bold ${isGirl ? 'text-pink-600' : 'text-blue-600'}">${gTag}</span>
                             </div>
                         `;
                     }).join('');
                 } else { 
-                    previewCard.classList.remove('opacity-100');
-                    previewCard.classList.add('opacity-0');
+                    document.getElementById('preview-room-title').innerText = 'ROOM';
+                    document.getElementById('preview-room-members').innerHTML = '';
+                    previewCard.classList.add('invisible');
                     activeModalRoomNo = '';
                 }
-
-                if (cardNoInput.length >= 5 && targetCard === null) cardInputEl.blur();
             } else {
-                document.getElementById('person-name').value = '';
-                document.getElementById('thai-name').value = '';
-                document.getElementById('gender').value = '';
-                document.getElementById('department').value = '';
-                document.getElementById('room-no').value = '';
-                document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
-                previewCard.classList.remove('opacity-100');
-                previewCard.classList.add('opacity-0');
-                activeModalRoomNo = '';
+                clearEmployeeFields();
             }
         }
 
