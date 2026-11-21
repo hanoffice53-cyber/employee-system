@@ -94,7 +94,7 @@
 
     <!-- MAIN APP CONTENT -->
     <div id="app-content" class="min-h-screen flex flex-col">
-        
+
         <!-- Navigation Menu Bar -->
         <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-2.5 sm:px-4 py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 sm:gap-2">
@@ -117,7 +117,7 @@
         </header>
 
         <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 flex-grow w-full space-y-4">
-            
+
             <!-- SECTION 1: CHECK & SEARCH -->
             <div id="section-check" class="app-section space-y-4">
                 <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-3 sm:p-6 max-w-4xl mx-auto space-y-3">
@@ -144,14 +144,21 @@
 
                     <div class="border-2 border-gray-800 rounded-xl p-3 sm:p-5 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-                            <!-- Left Column: Full-Bleed Photo & Conditional Room Card Preview -->
-                            <div class="flex flex-col items-center justify-start space-y-3 min-w-0">
+                            <!-- Left Column: Full-Bleed Photo, Safety Badge & Conditional Room Card Preview -->
+                            <div class="flex flex-col items-center justify-start space-y-2.5 min-w-0">
                                 <div class="flex flex-col items-center justify-between border-2 border-emerald-500 rounded-xl p-1.5 bg-white w-full h-64 shadow-sm relative overflow-hidden">
                                     <div class="w-full h-[222px] overflow-hidden rounded-lg bg-gray-100">
                                         <img id="profile-preview" src="https://via.placeholder.com/300" alt="Photo" onclick="zoomPhoto(this.src)" class="w-full h-full object-cover object-top cursor-pointer hover:opacity-95 transition" title="ဖိနှိပ်၍ ပုံကြီးကြည့်ရန်">
                                     </div>
                                     <span class="text-[10px] text-gray-400 font-bold pt-0.5">300 * 300 PHOTO</span>
                                 </div>
+
+                                <!-- ဓာတ်ပုံအောက်ခြေ สี SAFETY အရောင်အလိုက် အဝိုင်းလေး + အမည် -->
+                                <div id="safety-color-badge" class="hidden w-full items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-white border shadow-sm transition">
+                                    <span id="safety-color-dot" class="w-3.5 h-3.5 rounded-full shrink-0 border border-black/20"></span>
+                                    <span id="safety-color-name" class="text-xs font-extrabold tracking-wide truncate"></span>
+                                </div>
+
                                 <div id="room-card-preview" class="w-full border-2 border-emerald-500 rounded-xl overflow-hidden bg-white shadow-sm hidden flex-col">
                                     <div id="preview-room-title" onclick="openRoomModalFromPreview()" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-black text-center py-1 text-xs border-b border-emerald-500 cursor-pointer transition">ROOM</div>
                                     <div id="preview-room-members" class="divide-y divide-gray-100 p-1 text-[11px] max-h-32 overflow-y-auto"></div>
@@ -296,13 +303,21 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMmfqViIkGUO7ek48hnecALud94FVS_FWuYGDti4XHYcHQO9rPd9resdAqTerRrm1f/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytBTT88NXBra8eYf3SUQT2fvyEo8oafqqhIzbo9oT2Hv-IOhl2EEJLix8yn9F3SeTS/exec";
         const ID_COMPLETE_LENGTH = 5;
+
+        const SAFETY_COLOR_MAP = [
+            { keys: ["เขียว", "green"], hex: "#16a34a", name: "K.บุญส่ง" },
+            { keys: ["ฟ้า", "น้ำเงิน", "blue"], hex: "#2563eb", name: "K.วินัย" },
+            { keys: ["ส้ม", "orange"], hex: "#f97316", name: "K.สุริยัน" },
+            { keys: ["ชมพู", "pink"], hex: "#ec4899", name: "K.กิตติศักดิ์" },
+            { keys: ["ม่วง", "purple"], hex: "#9333ea", name: "K.จีระวัฒน์" }
+        ];
 
         let residents = [];
         let sheetAnnouncements = { my: "", th: "" };
         let currentRoomTab = 'A';
-        let currentActiveNationality = 'Myanmar'; 
+        let currentActiveNationality = 'Myanmar';
         let currentLang = localStorage.getItem('app_lang') || 'my';
         let isTickerVisible = localStorage.getItem('ticker_visible') !== 'false';
         let activeModalRoomNo = '';
@@ -395,6 +410,54 @@
             syncHeaderAndStatsVisibility('');
             loadData();
         });
+
+        function renderSafetyColorBadge(record) {
+            const badge = document.getElementById('safety-color-badge');
+            const dot = document.getElementById('safety-color-dot');
+            const label = document.getElementById('safety-color-name');
+            if (!badge || !dot || !label) return;
+
+            const rawSafety = String(
+                (record && (record.safetyColor || record.สีSAFETY || record.สี_SAFETY || record.safety)) || ""
+            ).trim();
+
+            if (!rawSafety) {
+                badge.classList.add('hidden');
+                badge.classList.remove('flex');
+                label.textContent = '';
+                return;
+            }
+
+            const lower = rawSafety.toLowerCase();
+            const matched = SAFETY_COLOR_MAP.find(item =>
+                item.keys.some(k => lower.includes(k.toLowerCase()))
+            );
+
+            if (matched) {
+                dot.style.backgroundColor = matched.hex;
+                label.textContent = matched.name;
+                label.style.color = matched.hex;
+                badge.style.borderColor = matched.hex;
+            } else {
+                dot.style.backgroundColor = '#6b7280';
+                label.textContent = rawSafety;
+                label.style.color = '#374151';
+                badge.style.borderColor = '#d1d5db';
+            }
+
+            badge.classList.remove('hidden');
+            badge.classList.add('flex');
+        }
+
+        function hideSafetyColorBadge() {
+            const badge = document.getElementById('safety-color-badge');
+            const label = document.getElementById('safety-color-name');
+            if (badge) {
+                badge.classList.add('hidden');
+                badge.classList.remove('flex');
+            }
+            if (label) label.textContent = '';
+        }
 
         function syncHeaderAndStatsVisibility(cardNoInput) {
             const isCheckTabActive = !document.getElementById('section-check').classList.contains('hidden');
@@ -536,7 +599,7 @@
             if(nat === 'Myanmar') document.getElementById('nat-myanmar').className = "nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm";
             if(nat === 'Cambodia') document.getElementById('nat-cambodia').className = "nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm";
             if(nat === 'Laos') document.getElementById('nat-laos').className = "nat-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg shadow-sm";
-            
+
             renderActiveTable();
         }
 
@@ -704,7 +767,7 @@
                     const gTag = isGirl ? 'ญ' : 'ช';
                     const photo = formatPhotoUrl(m.photo);
                     const nat = getNationality(m);
-                    
+
                     let natText = t.natMyanmar;
                     if (nat === 'Cambodia') natText = t.natCambodia;
                     if (nat === 'Laos') natText = t.natLaos;
@@ -751,6 +814,7 @@
             document.getElementById('department').value = '';
             document.getElementById('room-no').value = '';
             document.getElementById('profile-preview').src = 'https://via.placeholder.com/300';
+            hideSafetyColorBadge();
             document.getElementById('preview-room-title').innerText = 'ROOM';
             document.getElementById('preview-room-members').innerHTML = '';
             const previewCard = document.getElementById('room-card-preview');
@@ -782,6 +846,7 @@
                 document.getElementById('department').value = found.department || '';
                 document.getElementById('room-no').value = found.roomNo || '';
                 document.getElementById('profile-preview').src = formatPhotoUrl(found.photo);
+                renderSafetyColorBadge(found);
 
                 if (found.roomNo) {
                     activeModalRoomNo = found.roomNo;
@@ -800,7 +865,7 @@
                             </div>
                         `;
                     }).join('');
-                } else { 
+                } else {
                     document.getElementById('preview-room-title').innerText = 'ROOM';
                     document.getElementById('preview-room-members').innerHTML = '';
                     previewCard.classList.add('hidden');
@@ -814,7 +879,7 @@
 
         function updateStats() {
             const active = residents.filter(r => !checkIsResigned(r));
-            
+
             const myanmarList = active.filter(r => getNationality(r) === 'Myanmar');
             const cambodiaList = active.filter(r => getNationality(r) === 'Cambodia');
             const laosList = active.filter(r => getNationality(r) === 'Laos');
@@ -931,7 +996,7 @@
         function renderActiveTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-            
+
             const filteredList = residents.filter(r => !checkIsResigned(r) && getNationality(r) === currentActiveNationality);
 
             filteredList.forEach(r => {
@@ -961,7 +1026,7 @@
                     const isGirl = genderTxt.includes('မ') || genderTxt.includes('หญิง') || genderTxt.includes('ស្រី') || genderTxt.includes('ຍິງ');
                     const photo = formatPhotoUrl(r.photo);
                     const nat = getNationality(r);
-                    
+
                     let natText = t.natMyanmar;
                     if (nat === 'Cambodia') natText = t.natCambodia;
                     if (nat === 'Laos') natText = t.natLaos;
